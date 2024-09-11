@@ -22,7 +22,11 @@ erDiagram
     person_archive {
         id bigint PK
         tno varchar "第三方标志"
-        name varchar ""
+        name varchar
+        idcard varchar
+        gender varchar
+        age int
+        notio
         deleted int
         created datetime
         creator bigint
