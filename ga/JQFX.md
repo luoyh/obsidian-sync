@@ -91,6 +91,17 @@ erDiagram
 }%%
 
 erDiagram
+
+    event_keyword }|--|| event_base: ""
+    
+    event_keyword {
+        id bigint PK
+        sjid bigint FK "event_base.id"
+        type varchar "name,address,time,phone,car plate,idcard"
+        content varchar
+        start int "start the index for detail include"
+        end int "end the index for detail exclude"
+    }
     event_base {
         id bigint PK
         sjbh varchar "event no"
@@ -110,22 +121,26 @@ erDiagram
         updater bigint
     }    
 
+    event_base ||--|{ event_relate_person: ""
     event_relate_person {
         id bigint PK
         sjid bigint FK "event_base.id"
         ryid bigint FK "person_archive.id"
     }
    
-    event_base ||--|{ event_relate_person: ""
 
+    event_base ||--|{ event_relate: ""
     event_relate {
         id bigint PK
         sid bigint FK "event_base.id source"
         did bigint FK "event_base.id dest"
     }
-    event_base ||--|{ event_relate: ""
+    
+    
 
 ```
+
+
 
 314
 

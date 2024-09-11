@@ -13,7 +13,7 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "报警.md",
+                "file": "ga/JQFX.md",
                 "mode": "source",
                 "source": false
               }
@@ -85,7 +85,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "报警.md",
+                "file": "ga/JQFX.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -110,7 +110,7 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "报警.md",
+                "file": "ga/JQFX.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               }
@@ -133,7 +133,7 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "报警.md"
+                "file": "ga/JQFX.md"
               }
             }
           }
@@ -157,9 +157,9 @@
   },
   "active": "4c8007d925b7ff38",
   "lastOpenFiles": [
+    "报警.md",
     "ga/JQFX.md",
     "个人述职报告.md",
-    "报警.md",
     "ga",
     "Biology.md",
     "create a link.md",
