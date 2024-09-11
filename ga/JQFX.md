@@ -21,7 +21,8 @@
 erDiagram
     person_archive {
         id bigint PK
-        
+        tno varchar "第三方标志"
+        name varchar ""
         deleted int
         created datetime
         creator bigint
