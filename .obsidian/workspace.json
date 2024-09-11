@@ -4,16 +4,16 @@
     "type": "split",
     "children": [
       {
-        "id": "2ea0a6c9b29574c2",
+        "id": "fd1e0e666c2db8e0",
         "type": "tabs",
         "children": [
           {
-            "id": "da6daa870bc356a5",
+            "id": "4c8007d925b7ff38",
             "type": "leaf",
             "state": {
               "type": "markdown",
               "state": {
-                "file": "ga/JQFX.md",
+                "file": "报警.md",
                 "mode": "source",
                 "source": false
               }
@@ -85,7 +85,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "ga/JQFX.md",
+                "file": "报警.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -110,7 +110,7 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "ga/JQFX.md",
+                "file": "报警.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               }
@@ -133,7 +133,7 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "ga/JQFX.md"
+                "file": "报警.md"
               }
             }
           }
@@ -155,11 +155,11 @@
       "obsidian-git:Open Git source control": false
     }
   },
-  "active": "da6daa870bc356a5",
+  "active": "4c8007d925b7ff38",
   "lastOpenFiles": [
-    "报警.md",
     "ga/JQFX.md",
     "个人述职报告.md",
+    "报警.md",
     "ga",
     "Biology.md",
     "create a link.md",
