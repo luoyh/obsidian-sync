@@ -28,6 +28,7 @@
 >同步`MySQL`的区域表到`doris`
 
 
+
 # 报警计算
 
 > 因报警计算的规则较多且复杂, 使用`FlinkSQL`并不能很好的实现.
@@ -36,6 +37,39 @@
 > 建议升级`dinky`到`1.1`
 
 
+```mermaid
+
+graph TD;
+    subgraph Source
+        K1[Kafka]
+    end
+    subgraph Flink
+        F1[Flink DataStream]
+        F2[分组]
+        subgraph Process
+            R1[规则1]
+            R2[规则2]
+            R3[规则N]
+        end
+    end
+    subgraph Sink
+        D1[Doris]
+    end
+    K1 --> Flink;
+    F1 --> F2;
+    F2 --> R1;
+    F2 --> R2;
+    F2 --> R3;
+    R1 --> Sink;
+    R2 --> Sink;
+    R3 --> Sink;
+
+```
 
 
 
+`0.7.5`只支持`yarn`方式把`jar`保存到`hdfs`内.
+![[Pasted image 20240912105817.png]]
+官方文档说明:
+
+![[Pasted image 20240912110022.png]]
