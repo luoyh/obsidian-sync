@@ -137,11 +137,12 @@ ds.keyBy(X0200::getClientId)
                 stateAlarmId.update(alarmId);
                 // 根据命中时间为报警时间
                 stateHitTime.update(time);
+                // TODO: sideout or insert doris alarm info
             }
         } else { //速度小于60
             // 报警id不为空, 则更新结束时间
             if (null != stateAlarmId.value()) {
-                // update alarm set end time
+                // TODO: update alarm set end time
             }
             // 清除报警id和命中时间
             stateAlarmId.clear();
@@ -167,12 +168,17 @@ ds.keyBy(X0200::getClientId)
         stateAlarmId.update(alarmId);
         // 设置报警时间为触发前置的时间+20秒
         stateHitTime.update(stateHitTime.value() + 20000);
+        // TODO: sideout or insert doris alarm info
     }
 })
 
-.print();
+// sink处理
+// 这里可以使用sideout获取不同的结果进行sink
+.print()
+
 ;
-;
+
+
 ```
 
 
