@@ -182,9 +182,9 @@ ds.keyBy(X0200::getClientId)
 ```
 
 
+***
 
-
-`0.7.5`只支持`yarn`方式把`jar`保存到`hdfs`内.
+## `0.7.5`只支持`yarn`方式把`jar`保存到`hdfs`内.
 ![[Pasted image 20240912105817.png]]
 [官方文档说明](https://www.dinky.org.cn/docs/0.7/administrator_guide/register_center/jar_manager) 
 
