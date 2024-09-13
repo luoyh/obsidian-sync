@@ -13,7 +13,7 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "tqbb/Dinky.md",
+                "file": "Welcome.md",
                 "mode": "source",
                 "source": false
               }
@@ -85,7 +85,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "tqbb/Dinky.md",
+                "file": "Welcome.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -110,7 +110,7 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "tqbb/Dinky.md",
+                "file": "Welcome.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               }
@@ -133,7 +133,7 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "tqbb/Dinky.md"
+                "file": "Welcome.md"
               }
             }
           }
@@ -157,18 +157,18 @@
   },
   "active": "4c8007d925b7ff38",
   "lastOpenFiles": [
+    "create a link.md",
+    "tqbb/Dinky.md",
     "imgs/Pasted image 20240912113520.png",
     "imgs/Pasted image 20240912110022.png",
     "imgs",
     "imgs/Pasted image 20240912105817.png",
     "ga/JQFX.md",
-    "tqbb/Dinky.md",
     "tqbb",
     "报警.md",
     "个人述职报告.md",
     "ga",
     "Biology.md",
-    "create a link.md",
     "media server/压测.md",
     "media server/images/Pasted image 20240903150519.png",
     "media server/images/Pasted image 20240903150455.png",
@@ -178,7 +178,6 @@
     "media server/images/Pasted image 20240903152141.png",
     "media server/images/Pasted image 20240903152121.png",
     "media server/images/Pasted image 20240903150701.png",
-    "media server/images/Pasted image 20240903150536.png",
     "media server/整体说明.md",
     "Untitled.canvas",
     "Welcome.md",
