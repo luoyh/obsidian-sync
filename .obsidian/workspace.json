@@ -13,7 +13,7 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "报警.md",
+                "file": "tqbb/Dinky.md",
                 "mode": "source",
                 "source": false
               }
@@ -85,7 +85,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "报警.md",
+                "file": "tqbb/Dinky.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -110,7 +110,7 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "报警.md",
+                "file": "tqbb/Dinky.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               }
@@ -133,7 +133,7 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "报警.md"
+                "file": "tqbb/Dinky.md"
               }
             }
           }
@@ -157,6 +157,7 @@
   },
   "active": "4c8007d925b7ff38",
   "lastOpenFiles": [
+    "报警.md",
     "Welcome.md",
     "create a link.md",
     "tqbb/Dinky.md",
@@ -166,7 +167,6 @@
     "imgs/Pasted image 20240912105817.png",
     "ga/JQFX.md",
     "tqbb",
-    "报警.md",
     "个人述职报告.md",
     "ga",
     "Biology.md",
