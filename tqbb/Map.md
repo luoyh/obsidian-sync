@@ -78,9 +78,9 @@ erDiagram
 
 
 
-# 数据宽表
+# 数据表
 
-存储地图服务的地址信息, 基本上是根据经纬度做唯一约束
+存储地图服务的地址信息, 基本上是根据**经纬度做唯一约束**
 
 ```mermaid
 %%{
@@ -102,6 +102,16 @@ erDiagram
 erDiagram
     ods_map_data {
         lon int "经度,度乘以10的6次方,比如经度为:106.3412,存的结果是:106341200"
+        lat int "维度,和经度一样"
+        formatted_address_poi string "结构化地址"
+        formatted_address string "结构化地址（不包含POI信息）"
+        edz string "所属开发区"
+        pois string "周边poi数组"
+        roads string "道路信息,包含道路等级"
+        poi_regions string "查询点的poi信息"
+        sematic_description string "当前位置结合POI的语义化结果描述"
+        district string "行政区编码"
+        district_text string "行政区划"
     }    
     
 ```
