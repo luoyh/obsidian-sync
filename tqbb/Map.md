@@ -128,8 +128,9 @@ erDiagram
       id bigint PK
       vehicle_id bigint "车辆id"
       company_id bigint "公司id"
-      
+      client_id string "终端手机号"
       plate string "车牌"
+      user_id string "用户id"
       code string "第三方code"
       cfg string "第三方配置,可加密存储"
       state int "状态:0-请求成功,1-请求失败"
