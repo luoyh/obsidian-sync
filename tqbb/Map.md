@@ -93,9 +93,9 @@ erDiagram
       id bigint PK
       from_company bigint "哪个公司分配的,0表示平台,其它表示A公司能给B公司次数"
       company_id bigint "公司id"
-      times int "次数,<=0表示无限制"
-      used int "已使用次数"
-      all int "总使用次数"
+      times bigint "次数,<=0表示无限制"
+      used bigint "已使用次数"
+      all bigint "总使用次数"
       type int "类型:0-总次数,1-每自然天,2-每自然月,3-每自然年"
       last_date int "最后请求日期,yyyyMMdd,用于重置次数"
     }
@@ -182,7 +182,7 @@ flowchart LR
 
 erDiagram
     ods_map_data {
-        lon int "经度,度乘以10的6次方,比如经度为:106.3412,存的结果是:106341200"
+        lng int "经度,度乘以10的6次方,比如经度为:106.3412,存的结果是:106341200"
         lat int "纬度,和经度一样"
         formatted_address_poi string "结构化地址"
         formatted_address string "结构化地址（不包含POI信息）"
