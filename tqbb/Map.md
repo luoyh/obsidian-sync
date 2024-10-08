@@ -61,6 +61,7 @@ erDiagram
         cfg string "配置信息,比如账户/appkey等,不同厂商不同"
         company_id bigint "公司id,0表示全局"
         prior int "优先级,越大越先使用"
+        times int "默认使用次数限制,一般在全局情况下,默认给其他公司的次数,避免每个公司都初始化配置"
         enabled int "是否启用,0-否,1-是"
     }    
 
@@ -94,11 +95,51 @@ erDiagram
       company_id bigint "公司id"
       times int "次数,<=0表示无限制"
       used int "已使用次数"
+      all int "总使用次数"
       type int "类型:0-总次数,1-每自然天,2-每自然月,3-每自然年"
       last_date int "最后请求日期,yyyyMMdd,用于重置次数"
     }
 ```
 
+
+# 请求日志
+
+记录每次请求的日志,方便后续做分析, 计费等.
+
+```mermaid
+%%{
+    init: {
+        'theme': 'forest', 
+        'themeVariables': { 
+            'fontSize': '12px', 
+            'fontFamily': 'Consolas',  
+            'primaryColor': '#BB2528', 
+            'primaryTextColor': '#fff', 
+            'primaryBorderColor': '#7C0000', 
+            'lineColor': '#F8B229', 
+            'secondaryColor': '#006100', 
+            'tertiaryColor': '#fff'
+        }
+    }
+}%%
+
+erDiagram
+    ods_map_log {
+      id bigint PK
+      vehicle_id bigint "车辆id"
+      company_id bigint "公司id"
+      
+      plate string "车牌"
+      code string "第三方code"
+      cfg string "第三方配置,可加密存储"
+      state int "状态:0-请求成功,1-请求失败"
+      api string "请求api"
+      dsc string "请求说明"
+      qt datetime "请求时间"
+      req string "请求参数"
+      res string "返回结果"
+    }
+```
 
 # 请求流程
 
