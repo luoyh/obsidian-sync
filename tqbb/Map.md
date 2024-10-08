@@ -59,22 +59,61 @@ erDiagram
         code string "编码,系统目前支持的第三方编码,如:baidu/amap/siwei"
         name string "名称"
         cfg string "配置信息,比如账户/appkey等,不同厂商不同"
-        companyid bigint "公司id,0表示全局"
+        company_id bigint "公司id,0表示全局"
         prior int "优先级,越大越先使用"
-        failup int "0-否,1-是,失败后是否使用全局配置,只要有一个配置了,就会在所有失败后根据全局配置请求"
         enabled int "是否启用,0-否,1-是"
     }    
-    
+
 ```
+
+# 用户次数限制配置
+
+当用户没有配置自定义的地图资源时, 平台给用户分配的资源使用次数
+
+```mermaid
+%%{
+    init: {
+        'theme': 'forest', 
+        'themeVariables': { 
+            'fontSize': '12px', 
+            'fontFamily': 'Consolas',  
+            'primaryColor': '#BB2528', 
+            'primaryTextColor': '#fff', 
+            'primaryBorderColor': '#7C0000', 
+            'lineColor': '#F8B229', 
+            'secondaryColor': '#006100', 
+            'tertiaryColor': '#fff'
+        }
+    }
+}%%
+
+erDiagram
+    map_company_limit {
+      id bigint PK
+      from_company bigint "哪个公司分配的,0表示平台,其它表示A公司能给B公司次数"
+      company_id bigint "公司id"
+      times int "次数,<=0表示无限制"
+      used int "已使用次数"
+      type int "类型:0-总次数,1-每自然天,2-每自然月,3-每自然年"
+      last_date int "最后请求日期,yyyyMMdd,用于重置次数"
+    }
+```
+
 
 # 请求流程
 
-1. 先根据信息查询本地数据库是否存在, 有就返回,否则到2
-2. 根据用户信息查询`map_config`自己所属配置, 有就到4
-3. 查询全局的配置,也就是`companyid=0`的
-4. 根据`prior`优先级倒序请求第三方厂商, 成功就终止请求到6
-5. 非全局配置请求所有失败且有其中一个配置`failup=1`的,到3
-6. 请求结果写入到本地数据库, 返回结果
+```mermaid
+flowchart LR
+  A["请求开始"]
+  A --> B{"查询自己配置的map_config"}
+  B -->|无| C{查询分配的配置}
+  C -->|无| E[结束]
+  C -->|有| D{是否超数}
+  D -->|无| F[查询第三方]
+  D -->|超出限制| E
+  F --> E
+  B -->|有| F
+```
 
 
 
