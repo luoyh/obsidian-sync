@@ -13,7 +13,7 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "报警.md",
+                "file": "tqbb/Map.md",
                 "mode": "source",
                 "source": false
               }
@@ -85,7 +85,6 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "报警.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -110,7 +109,6 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "报警.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               }
@@ -132,9 +130,7 @@
             "type": "leaf",
             "state": {
               "type": "outline",
-              "state": {
-                "file": "报警.md"
-              }
+              "state": {}
             }
           }
         ],
@@ -155,10 +151,11 @@
       "obsidian-git:Open Git source control": false
     }
   },
-  "active": "4c8007d925b7ff38",
+  "active": "e0f51cbbefd480fc",
   "lastOpenFiles": [
-    "tqbb/Dinky.md",
+    "tqbb/Map.md",
     "报警.md",
+    "tqbb/Dinky.md",
     "Welcome.md",
     "create a link.md",
     "imgs/Pasted image 20240912113520.png",
