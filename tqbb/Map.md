@@ -80,7 +80,7 @@ erDiagram
 
 # 数据表
 
-存储地图服务的地址信息, 基本上是根据**经纬度做唯一约束**
+存储地图服务的地址信息, 根据**经纬度做唯一约束**
 
 ```mermaid
 %%{
@@ -102,7 +102,7 @@ erDiagram
 erDiagram
     ods_map_data {
         lon int "经度,度乘以10的6次方,比如经度为:106.3412,存的结果是:106341200"
-        lat int "维度,和经度一样"
+        lat int "纬度,和经度一样"
         formatted_address_poi string "结构化地址"
         formatted_address string "结构化地址（不包含POI信息）"
         edz string "所属开发区"
