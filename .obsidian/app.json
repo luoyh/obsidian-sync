@@ -6,5 +6,6 @@
     "margin": "0",
     "downscalePercent": 100
   },
-  "useTab": false
+  "useTab": false,
+  "tabSize": 2
 }
