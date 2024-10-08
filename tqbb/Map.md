@@ -11,16 +11,22 @@
 ```mermaid
 sequenceDiagram
   autonumber
-  调用方 ->> Map: 查询地图信息
+  调用方 ->> Map service: 查询地图信息
   critical 查询本地数据库
-    Map -->> DB: 查询本地是否存在数据
-  option 本地数据存在
-    Map ->> 调用方: 返回结果
-  option 本地数据不存在
-    Map -->> 第三方: 根据配置查询第三方
-  option 第三方超时或异常
-    第三方 ->> Map: 无数据
-    Map ->> 调用方: 无数据
+    Map service -->> Local DB: 查询本地是否存在数据
+    option 本地数据存在
+      Local DB ->> +Map service: 有结果
+      Map service ->> -调用方: 返回结果
+    option 本地数据不存在
+      Local DB ->> +Map service: 没有结果
+      Map service -->> -第三方: 根据配置查询第三方
+    option 请求成功
+      第三方 ->> +Map service: 返回结果
+      Map service ->> +Local DB: 更新本地数据库
+      Map service ->> -调用方: 返回结果
+    option 第三方超时或异常
+      第三方 ->> +Map service: 无数据
+      Map service ->> -调用方: 无数据
   end
 ```
 
@@ -50,14 +56,53 @@ sequenceDiagram
 erDiagram
     map_config {
         id bigint PK
-        code string "编码,系统目前支持的第三方编码:baidu/amap/siwei"
+        code string "编码,系统目前支持的第三方编码,如:baidu/amap/siwei"
         name string "名称"
         cfg string "配置信息,比如账户/appkey等,不同厂商不同"
-        company_id bigint "公司id,0表示全局"
-        rank int "优先级,越大越先使用"
+        companyid bigint "公司id,0表示全局"
+        prior int "优先级,越大越先使用"
         failup int "0-否,1-是,失败后是否使用全局配置,只要有一个配置了,就会在所有失败后根据全局配置请求"
+        enabled int "是否启用,0-否,1-是"
     }    
     
 ```
 
+# 请求流程
+
+1. 先根据信息查询本地数据库是否存在, 有就返回,否则到2
+2. 根据用户信息查询`map_config`自己所属配置, 有就到4
+3. 查询全局的配置,也就是`companyid=0`的
+4. 根据`prior`优先级倒序请求第三方厂商, 成功就终止请求到6
+5. 非全局配置请求所有失败且有其中一个配置`failup=1`的,到3
+6. 请求结果写入到本地数据库, 返回结果
+
+
+
+# 数据宽表
+
+存储地图服务的地址信息, 基本上是根据经纬度做唯一约束
+
+```mermaid
+%%{
+    init: {
+        'theme': 'forest', 
+        'themeVariables': { 
+            'fontSize': '12px', 
+            'fontFamily': 'Consolas',  
+            'primaryColor': '#BB2528', 
+            'primaryTextColor': '#fff', 
+            'primaryBorderColor': '#7C0000', 
+            'lineColor': '#F8B229', 
+            'secondaryColor': '#006100', 
+            'tertiaryColor': '#fff'
+        }
+    }
+}%%
+
+erDiagram
+    ods_map_data {
+        lon int "经度,度乘以10的6次方,比如经度为:106.3412,存的结果是:106341200"
+    }    
+    
+```
 
