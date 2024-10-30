@@ -85,7 +85,6 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "2410/rm_vehicle_alarm_info.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -110,7 +109,6 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "2410/rm_vehicle_alarm_info.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               }
@@ -132,9 +130,7 @@
             "type": "leaf",
             "state": {
               "type": "outline",
-              "state": {
-                "file": "2410/rm_vehicle_alarm_info.md"
-              }
+              "state": {}
             }
           }
         ],
@@ -155,10 +151,10 @@
       "obsidian-git:Open Git source control": false
     }
   },
-  "active": "4c8007d925b7ff38",
+  "active": "e0f51cbbefd480fc",
   "lastOpenFiles": [
-    "tqbb/Map.md",
     "2410/rm_vehicle_alarm_info.md",
+    "tqbb/Map.md",
     "2410",
     "报警.md",
     "tqbb/Dinky.md",
