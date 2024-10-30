@@ -1,4 +1,8 @@
 
+> doris报警表的修改和业务SQL的优化.
+> 报警表包含设备报警,平台报警,频繁报警.
+> 主要是根据车辆查询时间段内的报警信息.
+
 # 定义
 
 ```sql
@@ -362,11 +366,12 @@ select v.vehicle_id,
 
 ```sql
 CREATE TABLE `rm_vehicle_alarm_info1` (
-  `company_id` bigint not null comment 'gpong's'
+  `arm_time_start` datetime not NULL COMMENT '报警开始时间',
   `vehicle_id` bigint NOT NULL COMMENT '车牌ID',
+  `arm_type` varchar(128) not NULL COMMENT '报警类型',
+  `arm_source` int not null comment '报警来源:0-设备,1-平台,2-频繁',
+  `company_id` bigint not null comment '公司id',
   `client_id` varchar(40) NOT NULL COMMENT '设备编号',
-  `arm_time_start` datetime NULL COMMENT '报警开始时间',
-  `arm_type` varchar(128) NULL COMMENT '报警类型',
   `plate` text NULL COMMENT '车牌号',
   `arm_time_end` datetime NULL COMMENT '报警结束时间',
   `arm_info` text NULL COMMENT '报警信息',
@@ -387,9 +392,9 @@ CREATE TABLE `rm_vehicle_alarm_info1` (
   `handle_model` text NULL COMMENT '处理模块',
   `msg_type` text NULL COMMENT '消息类型'
 ) ENGINE=OLAP
-UNIQUE KEY(`id`)
-COMMENT '报警信息记录表，id由vehicle_id，arm_time_start，arm_type 换算为hash值'
-DISTRIBUTED BY HASH(`id`) BUCKETS AUTO
+UNIQUE KEY(`arm_time_start`, `vehicle_id`, `arm_type`, `arm_source`)
+COMMENT '报警信息记录表'
+DISTRIBUTED BY HASH(`arm_time_start`, `vehicle_id`) BUCKETS AUTO
 PROPERTIES (
 "replication_allocation" = "tag.location.default: 1",
 "min_load_replica_num" = "-1",
@@ -407,3 +412,5 @@ PROPERTIES (
 "enable_mow_light_delete" = "false"
 );;
 ```
+
+> 建议告警表的所有查询都需要按时间进行查询.
