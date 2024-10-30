@@ -63,6 +63,13 @@ PROPERTIES (
 # 目前的SQL
 ## listAlarmInfo
 
+
+| 老表耗时 | 新表耗时 | 测试条件                                                                                                                                                                   |
+| ---- | ---- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 35s  | 30s  | WHERE  u.del_flag = 0<br>		order by t.arm_time_start desc limit 2000000,100                                                                                            |
+| 6s   | 0.4s | 带时间条件<br>		WHERE  u.del_flag = 0<br>    and t.arm_time_start BETWEEN '2024-07-14 00:00:00' and '2024-07-15 00:00:00'<br>		order by t.arm_time_start desc limit 100,100 |
+
+
 **SQL**
 ```sql
     SELECT t.id,
@@ -120,6 +127,12 @@ PROPERTIES (
 
 
 ## getAlarmPageList
+
+
+| 老表耗时 | 新表耗时 | 测试条件                                                                        |
+| ---- | ---- | --------------------------------------------------------------------------- |
+| 5.5s | 4.3s | WHERE  u.del_flag = 0<br>		order by t.arm_time_start desc limit 100000,1000 |
+
 
 ```sql
 SELECT t.id,
@@ -191,6 +204,12 @@ SELECT t.id,
 
 ## selectAlarmSummaryPage
 
+| 老表耗时 | 新表耗时 | 条件  |
+| ---- | ---- | --- |
+| 0.8s | 0.7s | 无   |
+
+
+
 ```sql
 select vehicle_id vehicleId,
 			   SUM(CASE WHEN arm_type='overspeedAlarm' THEN 1 ELSE 0 END) as overspeedAlarmCount,
@@ -237,6 +256,12 @@ select vehicle_id vehicleId,
 ## selectVehicleAlarmSummary (警情统计分页查询)
 
 `/alarm/alarmSummaryPage`
+
+
+| 老表耗时 | 新表耗时 | 测试条件         |
+| ---- | ---- | ------------ |
+| 2.5s | 2.2s | 去掉了vl的表, 无条件 |
+
 
 ```sql
 select v.vehicle_id,
