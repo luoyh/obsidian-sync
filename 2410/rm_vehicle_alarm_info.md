@@ -234,7 +234,9 @@ select vehicle_id vehicleId,
 
 
 
-## selectVehicleAlarmSummary
+## selectVehicleAlarmSummary (警情统计分页查询)
+
+`/alarm/alarmSummaryPage`
 
 ```sql
 select v.vehicle_id,
