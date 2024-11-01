@@ -10,6 +10,55 @@
 ```
 
 
+## spring-boot to executable
+
+```xml
+    <build>
+        <plugins>
+            <plugin>
+                 <groupId>org.graalvm.buildtools</groupId>
+                 <artifactId>native-maven-plugin</artifactId>
+             </plugin>
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+                <configuration>
+                     <image>
+                       <buildpacks>
+                           <buildpack>gcr.io/paketo-buildpacks/graalvm</buildpack>
+                           <buildpack>gcr.io/paketo-buildpacks/java-native-image</buildpack>
+                       </buildpacks>
+                       <env>
+                           <BP_JVM_VERSION>21.0.2</BP_JVM_VERSION>
+                           <BP_NATIVE_IMAGE>true</BP_NATIVE_IMAGE>
+                       </env>
+                    </image>
+                    <excludes>
+                        <exclude>
+                            <groupId>org.projectlombok</groupId>
+                            <artifactId>lombok</artifactId>
+                        </exclude>
+                    </excludes>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+
+
+```
+
+## build
+
+```bash
+
+# and use cmd
+mvn -Pnative native:compile -Dmaven.test.skip=true
+
+```
+
+
+## Dict as executable
+
 ```java
 
 import org.jsoup.Jsoup;
