@@ -13,7 +13,7 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "2410/rm_vehicle_alarm_info.md",
+                "file": "graalvm/Untitled.md",
                 "mode": "source",
                 "source": false
               }
@@ -138,7 +138,8 @@
       }
     ],
     "direction": "horizontal",
-    "width": 300
+    "width": 300,
+    "collapsed": true
   },
   "left-ribbon": {
     "hiddenItems": {
@@ -153,7 +154,10 @@
   },
   "active": "e0f51cbbefd480fc",
   "lastOpenFiles": [
+    "graalvm/Untitled.md",
     "2410/rm_vehicle_alarm_info.md",
+    "graalvm",
+    "Untitled",
     "tqbb/Map.md",
     "2410",
     "报警.md",
