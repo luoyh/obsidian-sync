@@ -27,16 +27,30 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "报警.md",
+                "file": "2410/rm_vehicle_alarm_info.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "报警"
+              "title": "rm_vehicle_alarm_info"
+            }
+          },
+          {
+            "id": "509c2df66814c5fd",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "Linux.md",
+                "mode": "source",
+                "source": false
+              },
+              "icon": "lucide-file",
+              "title": "Linux"
             }
           }
         ],
-        "currentTab": 1
+        "currentTab": 2
       }
     ],
     "direction": "vertical"
@@ -108,7 +122,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "报警.md",
+                "file": "Linux.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -118,7 +132,7 @@
                 "unlinkedCollapsed": true
               },
               "icon": "links-coming-in",
-              "title": "Backlinks for 报警"
+              "title": "Backlinks for Linux"
             }
           },
           {
@@ -137,12 +151,12 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "报警.md",
+                "file": "Linux.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               },
               "icon": "links-going-out",
-              "title": "Outgoing links from 报警"
+              "title": "Outgoing links from Linux"
             }
           },
           {
@@ -164,10 +178,10 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "报警.md"
+                "file": "Linux.md"
               },
               "icon": "lucide-list",
-              "title": "Outline of 报警"
+              "title": "Outline of Linux"
             }
           }
         ],
@@ -189,18 +203,20 @@
       "obsidian-git:Open Git source control": false
     }
   },
-  "active": "41670d530702302c",
+  "active": "509c2df66814c5fd",
   "lastOpenFiles": [
+    "2410/rm_vehicle_alarm_info.md",
+    "Linux.md",
+    "Welcome.md",
+    "报警.md",
+    "个人述职报告.md",
     "graalvm/Untitled.md",
     "docker.md",
-    "2410/rm_vehicle_alarm_info.md",
     "graalvm",
     "Untitled",
     "tqbb/Map.md",
     "2410",
-    "报警.md",
     "tqbb/Dinky.md",
-    "Welcome.md",
     "create a link.md",
     "imgs/Pasted image 20240912113520.png",
     "imgs/Pasted image 20240912110022.png",
@@ -208,7 +224,6 @@
     "imgs/Pasted image 20240912105817.png",
     "ga/JQFX.md",
     "tqbb",
-    "个人述职报告.md",
     "ga",
     "Biology.md",
     "media server/压测.md",
