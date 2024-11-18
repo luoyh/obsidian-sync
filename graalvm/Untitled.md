@@ -89,6 +89,7 @@ public class Dict {
             word.select("div.basic.clearfix ul li").forEach(e -> System.out.println(e.select("strong").text()));
         }
         doc.select("#content div.main div.layout.cn ul li").forEach(e -> System.out.println(e.text()));
+        doc.select("#content div.main div.word div.shape").forEach(e -> System.out.println(e.text()));
     }
 
 }
