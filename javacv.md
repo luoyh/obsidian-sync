@@ -31,3 +31,27 @@
 > ffmpeg -i small.mp4 -g 60 -hls_time 2 -hls_list_size 0 -hls_segment_size 500000 output.m3u8
 
 ```
+
+
+### docker image for javacv
+
+```bash
+FROM ubuntu:latest
+# 安装Java
+RUN apt-get update && apt-get install -y openjdk-17-jdk
+# 安装FFmpeg依赖
+RUN apt-get install -y ffmpeg libavcodec-extra
+
+# 复制FFmpeg库文件
+# COPY /path/to/ffmpeg/libs /usr/local/lib
+
+# 复制Java程序
+WORKDIR /opt
+COPY app.jar app.jar
+
+EXPOSE 80
+
+# 配置容器启动命令
+CMD java -Dserver.port=80 $JAVA_OPTS -jar app.jar
+
+```
