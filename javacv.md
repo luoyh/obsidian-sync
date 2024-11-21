@@ -13,4 +13,6 @@ ffmpeg -ss 0 -t 30 -f lavfi -i color=0x000000:s=1920x1080:r=240 -vcodec libx264 
 # 视频每帧加上时间戳
 ffmpeg -re -i b_240fps.mp4 -vf "drawtext=fontfile=C\\:/Windows/fonts/consola.ttf:text='%{pts\:hms}':x=100:y=100:fontsize=200:fontcolor=red" -c:v libx264 -an -f mp4 black_pts.mp4
 
+# 没有毫秒
+ffmpeg -re -ss 20 -i b_240fps.mp4 -vf "drawtext=fontfile=C\\:/Windows/fonts/consola.ttf:text='Timestamp\: %{pts\:gmtime\:0\:%M\\\:%S}.':x=100:y=100:fontsize=100:fontcolor=red" -c:v libx264 -an -f mp4 black_pts2.mp4
 ```
