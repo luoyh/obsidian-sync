@@ -7,5 +7,10 @@ ffmpeg  -i "http://tuqiaoxing-minio:31954/public/f4f8538c5de34dcd935ea67659c047f
 #  rtmp://219.153.49.165:1935/class/demo1
 
 
+# 生成30秒黑色背景视频
+ffmpeg -ss 0 -t 30 -f lavfi -i color=0x000000:s=1920x1080:r=240 -vcodec libx264 b_240fps.mp4
+
+# 视频每帧加上时间戳
+ffmpeg -re -i b_240fps.mp4 -vf "drawtext=fontfile=C\\:/Windows/fonts/consola.ttf:text='%{pts\:hms}':x=100:y=100:fontsize=200:fontcolor=red" -c:v libx264 -an -f mp4 black_pts.mp4
 
 ```
