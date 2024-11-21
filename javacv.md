@@ -26,6 +26,8 @@
 # -hls_start_number n 设置播放列表中 sequence number 的值为 number，默认值为 0。  
 # 注意：播放列表的 sequence number 对每个 segment 来说都必须是唯一的，而且它不能和片的文件名（当使用 wrap 选项时，文件名有可能会重复使用）混淆。
 # 设置关键帧间隔，设置间隔为 2 秒的参数如下：`-force_key_frames "expr:gte(t,n_forced*2)`“
-> ffmpeg -i test.mp4 -force_key_frames "expr:gte(t,n_forced*2)" -strict -2 -c:a aac -c:v libx264 -hls_time 2 -f hls index.m3u8
+> ffmpeg -i test.mp4 -force_key_frames "expr:gte(t,n_forced*2)" -strict -2 -c:a aac -c:v libx264 -hls_time 2 -hls_list_size 0 -f hls index.m3u8
+
+> ffmpeg -i small.mp4 -g 60 -hls_time 2 -hls_list_size 0 -hls_segment_size 500000 output.m3u8
 
 ```
