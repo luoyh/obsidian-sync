@@ -17,4 +17,9 @@
 > hash
 # 清除缓存
 > hash -r
+
+
+# /etc/profile
+# ~/.bashrc
+alias tailf='tail -f ---disable-inotify'
 ```
