@@ -22,4 +22,11 @@
 # /etc/profile
 # ~/.bashrc
 alias tailf='tail -f ---disable-inotify'
+
+# curl 中文参数, 比如: curl http://localhost/api/v1/test?name=张三
+# 使用--data-urlencode
+> curl -X GET --data-urlencode 'name=张三' "http://localhost/api/v1/test"
+> curl -X GET --data-urlencode 'name=张三' "http://localhost/api/v1/test?id=2"
+
+
 ```
