@@ -28,5 +28,10 @@ alias tailf='tail -f ---disable-inotify'
 > curl -X GET --data-urlencode 'name=张三' "http://localhost/api/v1/test"
 > curl -X GET --data-urlencode 'name=张三' "http://localhost/api/v1/test?id=2"
 
+# 文件行数
+> cat test.txt | wc -l
+# 日志文件每秒数量
+# 2024-11-29 09:46:03,965 INFO  com.xxx hello
+> awk '{print $1" "$2}' test.txt | awk -F ',' '{print $1}' | uniq -c
 
 ```

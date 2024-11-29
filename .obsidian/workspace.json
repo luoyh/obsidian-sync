@@ -125,12 +125,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "mysql.md",
+                "file": "Linux.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "mysql"
+              "title": "Linux"
             }
           }
         ],
@@ -289,8 +289,8 @@
   },
   "active": "8018b8b6016166be",
   "lastOpenFiles": [
-    "Linux.md",
     "mysql.md",
+    "Linux.md",
     "java.md",
     "javacv.md",
     "docker.md",
