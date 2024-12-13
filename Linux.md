@@ -34,4 +34,13 @@ alias tailf='tail -f ---disable-inotify'
 # 2024-11-29 09:46:03,965 INFO  com.xxx hello
 > awk '{print $1" "$2}' test.txt | awk -F ',' '{print $1}' | uniq -c
 
+
+# 输出的内容到复制
+> curl -s http://localhost/test/output.json | xclip -sel clip
+> echo abcd | xclip -sel clip
+
+# 输出的内容json格式化
+> curl -s http://localhost/test/output.json | jq .
+> echo '{"id":1, "name":"hello", "data": []}' | jq .
+
 ```
