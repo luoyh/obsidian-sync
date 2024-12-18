@@ -13,7 +13,6 @@
 
 # mvn copy dependency 
 > mvn dependency:copy-dependencies
-
 > mvn depencency:tree
-> 
+> mvn depencency:get
 ```
