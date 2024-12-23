@@ -13,12 +13,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "graalvm.md",
+                "file": "mysql.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "graalvm"
+              "title": "mysql"
             }
           }
         ]
@@ -176,8 +176,8 @@
   },
   "active": "135ab2fa1b1fed91",
   "lastOpenFiles": [
-    "graalvm/Untitled.md",
     "graalvm.md",
+    "graalvm/Untitled.md",
     "java.md",
     "Linux.md",
     "flink.md",
