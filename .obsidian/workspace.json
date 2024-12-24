@@ -13,12 +13,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "mysql.md",
+                "file": "java.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "mysql"
+              "title": "java"
             }
           }
         ]
@@ -176,12 +176,12 @@
   },
   "active": "135ab2fa1b1fed91",
   "lastOpenFiles": [
+    "mysql.md",
     "graalvm.md",
     "graalvm/Untitled.md",
     "java.md",
     "Linux.md",
     "flink.md",
-    "mysql.md",
     "javacv.md",
     "docker.md",
     "k8s.md",
