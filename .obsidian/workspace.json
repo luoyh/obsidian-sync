@@ -20,8 +20,23 @@
               "icon": "lucide-file",
               "title": "java"
             }
+          },
+          {
+            "id": "f21f9904063ff69f",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "editplus.md",
+                "mode": "source",
+                "source": false
+              },
+              "icon": "lucide-file",
+              "title": "editplus"
+            }
           }
-        ]
+        ],
+        "currentTab": 1
       }
     ],
     "direction": "vertical"
@@ -174,12 +189,13 @@
       "obsidian-git:Open Git source control": false
     }
   },
-  "active": "135ab2fa1b1fed91",
+  "active": "f21f9904063ff69f",
   "lastOpenFiles": [
+    "java.md",
+    "editplus.md",
     "mysql.md",
     "graalvm.md",
     "graalvm/Untitled.md",
-    "java.md",
     "Linux.md",
     "flink.md",
     "javacv.md",
