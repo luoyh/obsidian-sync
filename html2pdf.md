@@ -140,3 +140,25 @@ public class TestHtml2Pdf {
 }
 
 ```
+
+
+### use selenium
+
+```xml
+<dependency>
+<groupId>org.seleniumhq.selenium</groupId>
+<artifactId>selenium-java</artifactId>
+<version>4.27.0</version>
+
+</dependency>
+
+<dependency>
+
+<groupId>org.seleniumhq.selenium</groupId>
+
+<artifactId>selenium-chrome-driver</artifactId>
+
+<version>4.27.0</version>
+
+</dependency>
+```
