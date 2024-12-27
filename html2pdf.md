@@ -146,19 +146,98 @@ public class TestHtml2Pdf {
 
 ```xml
 <dependency>
-<groupId>org.seleniumhq.selenium</groupId>
-<artifactId>selenium-java</artifactId>
-<version>4.27.0</version>
-
+  <groupId>org.seleniumhq.selenium</groupId>
+  <artifactId>selenium-java</artifactId>
+  <version>4.27.0</version>
 </dependency>
 
 <dependency>
-
-<groupId>org.seleniumhq.selenium</groupId>
-
-<artifactId>selenium-chrome-driver</artifactId>
-
-<version>4.27.0</version>
-
+  <groupId>org.seleniumhq.selenium</groupId>
+  <artifactId>selenium-chrome-driver</artifactId>
+  <version>4.27.0</version>
 </dependency>
+```
+
+```java
+package com.test;
+
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.Base64;
+import java.util.HashMap;
+import java.util.Map;
+
+import org.openqa.selenium.Pdf;
+import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.chrome.ChromeOptions;
+import org.openqa.selenium.print.PrintOptions;
+
+
+/**
+ *
+ * @author luoyh(Roy) - Dec 27, 2024
+ * @since 21
+ */
+public class TestHtml2Pdf {
+    
+    public static void main(String[] args) throws Exception {
+//        generatePdf(Paths.get("C:/Users/huitao/Desktop/Untitled4.html"), Paths.get("D:\\.work\\.tmp\\123\\md." + System.currentTimeMillis() + ".pdf"));
+        asPdf(Paths.get("C:/Users/1/Desktop/Untitled4.html"), Paths.get("D:\\.work\\.tmp\\123\\md." + System.currentTimeMillis() + ".pdf"));
+    }
+    
+    private static void asPdf(Path inputPath, Path outputPath) throws IOException {
+//        System.setProperty("webdriver.chrome.driver", "D:\\.work\\data\\chrome\\chromedriver-win64\\chromedriver.exe");
+        ChromeOptions options = new ChromeOptions();
+        options.setBinary("D:\\.work\\data\\chrome\\chrome-headless-shell-win64\\chrome-headless-shell.exe");
+//        options.addArguments("--headless", "--disable-gpu", "--run-all-compositor-stages-before-draw");
+
+        System.out.println(5);
+        ChromeDriver chromeDriver = new ChromeDriver(options);
+        System.out.println(4);
+        chromeDriver.get("data:text/html;base64," + Base64.getEncoder().encodeToString(Files.readAllBytes(inputPath)));
+        //chromeDriver.get(inputPath.toString());
+        
+        System.out.println(3);
+        PrintOptions print = new PrintOptions();
+        System.out.println(2);
+        Pdf pdf = chromeDriver.print(print);
+        System.out.println(1);
+        Files.write(outputPath, Base64.getDecoder().decode(pdf.getContent()));
+        chromeDriver.quit();
+        System.out.println(0);
+    }
+
+    private static void generatePdf(Path inputPath, Path outputPath) throws Exception {
+        try {
+            System.setProperty("webdriver.chrome.driver", "D:\\.work\\data\\chrome\\chromedriver-win64\\chromedriver.exe");
+            ChromeOptions options = new ChromeOptions();
+            options.addArguments("--headless", "--disable-gpu", "--run-all-compositor-stages-before-draw");
+            ChromeDriver chromeDriver = new ChromeDriver(options);
+            chromeDriver.get(inputPath.toString());
+            Map<String, Object> params = new HashMap();
+            System.out.println("11111111111");
+            String command = "Page.printToPDF";
+            
+            Map<String, Object> output = chromeDriver.executeCdpCommand(command, params);
+
+            try {
+                FileOutputStream fileOutputStream = new FileOutputStream(outputPath.toString());
+                byte[] byteArray = java.util.Base64.getDecoder().decode((String) output.get("data"));
+                fileOutputStream.write(byteArray);
+                fileOutputStream.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            chromeDriver.quit();
+        } catch (Exception e) {
+            e.printStackTrace(System.err);
+            throw e;
+        }
+    }
+
+}
+
 ```
