@@ -55,12 +55,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "kafka.md",
+                "file": "k8s.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "kafka"
+              "title": "k8s"
             }
           }
         ],
@@ -219,10 +219,10 @@
   },
   "active": "5de6b00066836b45",
   "lastOpenFiles": [
+    "kafka.md",
     "doris.md",
     "Welcome.md",
     "mysql.md",
-    "kafka.md",
     "java.md",
     "docker.md",
     "create a link.md",
