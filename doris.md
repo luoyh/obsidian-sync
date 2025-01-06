@@ -160,4 +160,66 @@ ORDER BY vehicle_id,device_time;
 +------------+---------------------+------------+-----------+---------------------+--------------------+
 
 
+-- 从第一行到最后一行累加
+select sum(duration) over(
+  partition by vehicle_id 
+  order by start_time 
+  rows between UNBOUNDED PRECEDING and UNBOUNDED following) duration,
+  last_value(acc_status) over(partition by vehicle_id order by start_time)
+   from end_time where acc_status=1;
+   
+-- 从第一行到当前行
+select sum(duration) over(
+  partition by vehicle_id 
+  order by start_time 
+  rows between 1 and current row) duration,
+  last_value(acc_status) over(partition by vehicle_id order by start_time)
+   from end_time where acc_status=1;
+
+-- 计算acc开时长
+with state_groups as (
+  select
+    vehicle_id,
+    device_time,
+    bitand(status_bit, 1) AS acc_status,
+    ROW_NUMBER() OVER(PARTITION BY vehicle_id ORDER BY device_time) - 
+    ROW_NUMBER() OVER(PARTITION BY vehicle_id, bitand(status_bit, 1) ORDER BY device_time) AS grp
+  from rm_vehicle_gps_info 
+  WHERE device_time BETWEEN '2024-12-24 11:55:02' AND '2024-12-24 11:56:00'
+  and message_id=512
+  -- and bitand(status_bit,1)=0
+  and vehicle_id=1783376234900697089
+  order by device_time
+)
+, group_grp as (
+
+  select 
+    vehicle_id,
+    min(device_time) start_time,
+    acc_status
+  from state_groups
+  group by vehicle_id,grp,acc_status
+  order by start_time
+)
+, end_time as (
+  select 
+    vehicle_id,
+    start_time,
+    lead(start_time, 1, null) over(partition by vehicle_id order by start_time) end_time,
+    TIMESTAMPDIFF(
+      SECOND,
+      start_time,
+      ifnull(
+        lead(start_time, 1, null) over(partition by vehicle_id order by start_time),
+        '2024-12-24 11:56:00')
+      ) as duration,
+    acc_status
+  from group_grp
+  order by start_time
+)
+select 
+  sum(duration) over(partition by vehicle_id order by start_time rows between UNBOUNDED PRECEDING and UNBOUNDED following) duration,
+  last_value(acc_status) over(partition by vehicle_id order by start_time)
+   from end_time where acc_status=1
+;
 ```

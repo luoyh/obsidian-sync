@@ -55,12 +55,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "k8s.md",
+                "file": "doris.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "k8s"
+              "title": "doris"
             }
           }
         ],
@@ -219,6 +219,7 @@
   },
   "active": "5de6b00066836b45",
   "lastOpenFiles": [
+    "k8s.md",
     "kafka.md",
     "doris.md",
     "Welcome.md",
@@ -235,7 +236,6 @@
     "Linux.md",
     "flink.md",
     "javacv.md",
-    "k8s.md",
     "2410/rm_vehicle_alarm_info.md",
     "个人述职报告.md",
     "graalvm",
