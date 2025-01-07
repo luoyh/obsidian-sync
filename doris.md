@@ -1,4 +1,10 @@
 
+**doris-all-in-one**
+
+```bash
+ docker run -d --name doris -p 9030:9030 -p 8030:8030 -p 8040:8040 -p 9060:9060 apache/doris:doris-all-in-one-2.1.0
+```
+
 **gaps and island**
 
 ```sql
