@@ -55,12 +55,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "editplus.md",
+                "file": "doris.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "editplus"
+              "title": "doris"
             }
           }
         ],
@@ -219,6 +219,7 @@
   },
   "active": "5de6b00066836b45",
   "lastOpenFiles": [
+    "editplus.md",
     "Welcome.md",
     "doris.md",
     "docker.md",
@@ -230,7 +231,6 @@
     "Biology.md",
     "报警.md",
     "html2pdf.md",
-    "editplus.md",
     "graalvm.md",
     "graalvm/Untitled.md",
     "Linux.md",
