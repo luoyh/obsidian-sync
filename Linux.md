@@ -44,3 +44,34 @@ alias tailf='tail -f ---disable-inotify'
 > echo '{"id":1, "name":"hello", "data": []}' | jq .
 
 ```
+
+
+### print 等待
+
+```bash
+#!/bin/bash
+
+file=$(mktemp)
+echo $file
+progress() {
+  pc=0
+  tx=("-" "\\" "|" "/")
+  while [ -e $file ]
+    do
+      #echo -n "sec\033[0K\r"
+      printf "%s\b" ${tx[$pc]}
+      #echo "."
+      sleep 0.3
+      pc=$(($pc+1))
+      if [ $pc -gt 3 ]; then
+        pc=0
+      fi
+    done
+}
+progress &
+#Do all the necessary staff
+sleep 3
+#now when everything is done
+rm -f $file
+
+```
