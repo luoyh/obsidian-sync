@@ -120,3 +120,44 @@ echo "mvn build finished. then build to docker and run > "
 #sh local-build-and-start.sh
 
 ```
+
+
+```bash
+#!/bin/bash
+#ms1=$(date +%s.%3N)
+#ms2=$(date +%s.%3N)
+#msdiff=$(awk "BEGIN{print $ms2 - $ms1}")
+#echo "msdiff=$msdiff"
+wait() {
+  pc=0
+  ms=0.0
+  #tx=("X" "^" "~" ">" "<")
+  tx=( - \\ \| / )
+  ext=$(ps aux | grep -v grep | grep mvvn | wc -l)
+  while [ $ext -gt 0 ]
+  do
+    #echo -n "$pc sec\033[0K\r"
+    #printf "%5ss %s\b\b\b\b\b\b\b\b" $ms ${tx[$pc]}
+    printf "%5ss %s\b\b\b\b\b\b\b\b" $ms "${tx[pc++%${#tx[@]}]}"
+    sleep 0.1
+    ms=`echo $ms + 0.1 | bc`
+    ext=$(ps aux | grep -v grep | grep mvvn | wc -l)
+  done
+}
+
+echo "wait for mvn build finished > "
+
+wait &
+
+ext=$(ps aux | grep -v grep | grep mvvn | wc -l)
+while [ $ext -gt 0 ]
+do
+  sleep 1
+  ext=$(ps aux | grep -v grep | grep mvvn | wc -l)
+done
+echo ""
+echo "mvn build finished. then build to docker and run > "
+
+#sh local-build-and-start.sh
+
+```
