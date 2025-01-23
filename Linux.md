@@ -91,7 +91,9 @@ wait() {
   while [ $ext -gt 0 ]
   do
     #echo -n "$pc sec\033[0K\r"
-    printf "%-5ss %s\b\b\b\b\b\b\b\b" $ms ${tx[$pc]}
+    #printf "%-5ss %s\b\b\b\b\b\b\b\b" $ms ${tx[$pc]}
+    # %-5s left align, %5s right align
+    printf "%5ss %s\b\b\b\b\b\b\b\b" $ms ${tx[$pc]}
     sleep 0.1
     pc=$(($pc+1))
     ms=`echo $ms + 0.1 | bc`
