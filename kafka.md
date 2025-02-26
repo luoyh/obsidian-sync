@@ -12,4 +12,8 @@
 
 # 查看topic信息
 ./kafka-topics.sh --describe  --bootstrap-server 127.0.0.1:9092 --topic test-topic
+
+
+bin/kafka-topics.sh --bootstrap-server localhost:9092 --alter --topic my_topic_name --partitions 40
+
 ```
