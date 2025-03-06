@@ -27,4 +27,15 @@ docker info
  No Proxy: localhost,127.0.0.1
 
 
+# 通过主机进程查看docker容器
+# 1
+for i in $(docker container ls --format "{{.ID}}"); do docker inspect -f '{{.State.Pid}} {{.Name}}' $i; done
+# 2
+pgrep containerd-shim
+# 3
+pgrep -P $pid
+# 4
+for i in $(pgrep containerd-shim); do pgrep -P $i; done
+
+for i in $(docker container ls --format "{{.ID}}"); do t=$(docker inspect -f '{{.State.Pid}} {{.Name}}' $i); echo "$t, `pgrep -P $(echo $t | awk '{print $1}')`"; done
 ```
