@@ -28,14 +28,21 @@ docker info
 
 
 # 通过主机进程查看docker容器
-# 1
+# 查看容器的pid
 for i in $(docker container ls --format "{{.ID}}"); do docker inspect -f '{{.State.Pid}} {{.Name}}' $i; done
-# 2
+# 通过pgrep查看
 pgrep containerd-shim
-# 3
+# 通过容器pid查看
 pgrep -P $pid
 # 4
 for i in $(pgrep containerd-shim); do pgrep -P $i; done
 
 for i in $(docker container ls --format "{{.ID}}"); do t=$(docker inspect -f '{{.State.Pid}} {{.Name}}' $i); echo "$t, `pgrep -P $(echo $t | awk '{print $1}')`"; done
+
+
+ps --ppid $DID -o pid,ppid,cmd
+
+# whole
+for i in $(docker container ls --format "{{.ID}}"); do t=$(docker inspect -f '{{.State.Pid}} {{.Name}}' $i); echo "$t, `ps --ppid $(echo $t | awk '{print $1}') -o pid,ppid,cmd`"; done
+
 ```
