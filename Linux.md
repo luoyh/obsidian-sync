@@ -43,6 +43,10 @@ alias tailf='tail -f ---disable-inotify'
 > curl -s http://localhost/test/output.json | jq .
 > echo '{"id":1, "name":"hello", "data": []}' | jq .
 
+# ssh keep-alive
+# interval 30 second send heart beat, 3 time no response then close
+> ssh -o ServerAliveInterval=30 -o ServerAliveCountMax=3 192.168.1.2
+
 ```
 
 
