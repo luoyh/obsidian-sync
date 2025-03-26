@@ -55,12 +55,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "Linux.md",
+                "file": "kafka.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "Linux"
+              "title": "kafka"
             }
           }
         ],
@@ -220,9 +220,9 @@
   },
   "active": "5de6b00066836b45",
   "lastOpenFiles": [
+    "Linux.md",
     "kafka.md",
     "docker.md",
-    "Linux.md",
     "editplus.md",
     "doris.md",
     "Welcome.md",
