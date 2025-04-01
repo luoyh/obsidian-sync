@@ -70,3 +70,23 @@ stream {
 ```
 
 这时使用`kafka.test-comomon:19092`连接即可
+
+```bash
+# 监听某个topic的消费情况
+lag=$(/data/kafka_2.13-3.8.0/bin/kafka-consumer-groups.sh --describe  --bootstrap-server 10.0.1.3:9092 --group test-consumer 2>&1  | grep my-topic | awk '
+{
+ print $0
+ offset += $4
+ end += $5
+ remain += $6
+} 
+END {
+ printf "current offset: %d \t end: %d \t lag: %d\n", offset, end, remain
+}
+')
+
+echo "`date` current consumer:" >> lag.out
+echo "$lag" >> lag.out
+echo "" >> lag.out
+
+```
