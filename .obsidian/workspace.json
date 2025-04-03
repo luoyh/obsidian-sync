@@ -55,12 +55,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "mysql.md",
+                "file": "editplus.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "mysql"
+              "title": "editplus"
             }
           }
         ],
@@ -220,6 +220,7 @@
   },
   "active": "5de6b00066836b45",
   "lastOpenFiles": [
+    "mysql.md",
     "kafka.md",
     "k8s.md",
     "Linux.md",
@@ -227,7 +228,6 @@
     "editplus.md",
     "doris.md",
     "Welcome.md",
-    "mysql.md",
     "java.md",
     "create a link.md",
     "Biology.md",
