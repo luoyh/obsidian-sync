@@ -165,3 +165,36 @@ echo "mvn build finished. then build to docker and run > "
 #sh local-build-and-start.sh
 
 ```
+
+
+```bash
+#/bin/sh
+cd /data/libs/graalvm-jdk-23_37.1/bin/build/sms
+
+
+input=$(/data/kafka_2.13-3.8.0/bin/kafka-consumer-groups.sh --describe  --bootstrap-server 192.168.2.51:30354 --group flink-alarm-consumer 2>&1  | grep jt808_trajectory_topic)
+
+if [ -z "$input" ]; then
+    r=$(/home/soft/libs/jdk-22.0.2/bin/java -cp .:$(find /data/libs/graalvm-jdk-23_37.1/bin/build/sms/lib/ -name  "*.jar" | xargs | sed  "s/ /:/g") SimpleSender 13648341599 "kafka连接失败")
+    echo "[`date`]: kafka error: $r" >> c.out
+    exit 0
+fi
+
+read offset end lag <<< $(echo "$input" | awk '{
+    offset += $4;
+    end += $5;
+    lag += $6;
+} END {print offset,end,lag}')
+
+echo "[`date`]: current consumer: " >> c.out
+echo "$input" >> c.out
+echo "[`date`]: offset=$offset, end=$end, lag=$lag" >> c.out
+
+if [[ $lag -gt 1000000 ]]; then
+    r=$(/home/soft/libs/jdk-22.0.2/bin/java -cp .:$(find /data/libs/graalvm-jdk-23_37.1/bin/build/sms/lib/ -name  "*.jar" | xargs | sed  "s/ /:/g") SimpleSender 13648341599 "gps积压($lag)")
+    echo "[`date`]: >> $lag is great than 1000000 then send sms result: $r" >> c.out
+fi
+echo "" >> c.out
+
+
+```
