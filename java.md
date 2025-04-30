@@ -39,3 +39,113 @@ LocalDate.now().atTime(LocalTime.MAX);
 LocalDateTime.now().truncatedTo(ChronoUnit.HOURS);
 
 ```
+
+```java
+
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.nio.ByteBuffer;
+
+import com.alibaba.fastjson2.JSON;
+
+import cn.hutool.core.util.HexUtil;
+
+/**
+ *
+ * @author luoyh(Roy) - Apr 30, 2025
+ * @since 21
+ */
+public class RedisHexAsBytes {
+    
+    public static void main(String[] args) throws Exception {
+        char[] cc = redis.toCharArray();
+        System.out.println(cc.length);
+        int s = cc.length;
+        ByteBuffer bb = ByteBuffer.allocate(cc.length);
+        int len = 0;
+//        byte[] raw = new byte[3351];
+        for (int i = 0; i < s; i ++) {
+            char c = cc[i];
+            System.out.println(c);
+            if (i < s - 1 && c == '\\' && cc[i + 1] == 'x') {
+                System.out.println(">> " + cc[i + 2] + "" + cc[i + 3]);
+                bb.put((byte) (Integer.parseInt(cc[i + 2] + "" + cc[i + 3], 16) & 0xff));
+//                raw[len ++] = (byte) (Integer.parseInt(cc[i + 2] + "" + cc[i + 3], 16) & 0xff);
+                i += 3;
+                continue;
+            }
+            if (i < s - 1 && c == '\\' && cc[i + 1] == 'r') {
+                System.out.println(">> \\r");
+                bb.put((byte) ('\r'));
+//                raw[len ++] = (byte) (Integer.parseInt(cc[i + 2] + "" + cc[i + 3], 16) & 0xff);
+                i += 1;
+                continue;
+            }
+            if (i < s - 1 && c == '\\' && cc[i + 1] == 'n') {
+                System.out.println(">> \\n");
+                bb.put((byte) ('\n'));
+//                raw[len ++] = (byte) (Integer.parseInt(cc[i + 2] + "" + cc[i + 3], 16) & 0xff);
+                i += 1;
+                continue;
+            }
+            if (i < s - 1 && c == '\\' && cc[i + 1] == 't') {
+                System.out.println(">> \\t");
+                bb.put((byte) ('\t'));
+//                raw[len ++] = (byte) (Integer.parseInt(cc[i + 2] + "" + cc[i + 3], 16) & 0xff);
+                i += 1;
+                continue;
+            }
+            if (i < s - 1 && c == '\\' && cc[i + 1] == 'b') {
+                System.out.println(">> \\b");
+                bb.put((byte) ('\b'));
+//                raw[len ++] = (byte) (Integer.parseInt(cc[i + 2] + "" + cc[i + 3], 16) & 0xff);
+                i += 1;
+                continue;
+            }
+            if (i < s - 1 && c == '\\' && cc[i + 1] == 'a') {
+                System.out.println(">> \\a");
+                bb.put((byte) 0x07);
+//                raw[len ++] = (byte) (Integer.parseInt(cc[i + 2] + "" + cc[i + 3], 16) & 0xff);
+                i += 1;
+                continue;
+            }
+            if (i < s - 1 && c == '\\' && cc[i + 1] == '"') {
+                System.out.println(">> \"");
+                bb.put((byte) ('"'));
+//                raw[len ++] = (byte) (Integer.parseInt(cc[i + 2] + "" + cc[i + 3], 16) & 0xff);
+                i += 1;
+                continue;
+            }
+            if (i < s - 1 && c == '\\' && cc[i + 1] == '\\') {
+                System.out.println(">> \\");
+                bb.put((byte) ('\\'));
+//                raw[len ++] = (byte) (Integer.parseInt(cc[i + 2] + "" + cc[i + 3], 16) & 0xff);
+                i += 1;
+                continue;
+            }
+            bb.put((byte) c);
+            System.out.println(">> " + c);
+//            raw[len ++] = (byte) c;
+        }
+        int size = bb.position();
+        bb.flip();
+        byte[] raw = new byte[size];
+        bb.get(raw);
+        
+        System.out.println(raw.length + "," + len);
+        System.out.println(HexUtil.encodeHexStr(raw));
+        
+//
+        try (ObjectInputStream input = new ObjectInputStream(new ByteArrayInputStream(raw))) {
+            System.out.println("input.available(): " + input.available());
+//        System.out.println("input.readByte(): " + input.readByte());
+            System.out.println(JSON.toJSONString(input.readObject()));
+        }
+    }
+    
+    private static final String redis = "\\xac\\xed\\x00\\x05sr\\x002";
+
+}
+
+```
