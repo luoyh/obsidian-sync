@@ -72,38 +72,17 @@ public class RedisHexAsBytes {
                 i += 3;
                 continue;
             }
-            if (i < s - 1 && c == '\\' && cc[i + 1] == 'r') {
-                bb.put((byte) ('\r'));
-                i += 1;
-                continue;
-            }
-            if (i < s - 1 && c == '\\' && cc[i + 1] == 'n') {
-                bb.put((byte) ('\n'));
-                i += 1;
-                continue;
-            }
-            if (i < s - 1 && c == '\\' && cc[i + 1] == 't') {
-                bb.put((byte) ('\t'));
-                i += 1;
-                continue;
-            }
-            if (i < s - 1 && c == '\\' && cc[i + 1] == 'b') {
-                bb.put((byte) ('\b'));
-                i += 1;
-                continue;
-            }
-            if (i < s - 1 && c == '\\' && cc[i + 1] == 'a') {
-                bb.put((byte) 0x07);
-                i += 1;
-                continue;
-            }
-            if (i < s - 1 && c == '\\' && cc[i + 1] == '"') {
-                bb.put((byte) ('"'));
-                i += 1;
-                continue;
-            }
-            if (i < s - 1 && c == '\\' && cc[i + 1] == '\\') {
-                bb.put((byte) ('\\'));
+            if (i < s - 1 && c == '\\' && cc[i + 1] != 'x') {
+                bb.put((byte) (switch (cc[i + 1]) {
+                case 'a' -> 0x07;
+                case 'b' -> 0x08;
+                case 't' -> 0x09;
+                case 'n' -> 0x0a;
+                case 'r' -> 0x0d;
+                case '"' -> 0x22;
+                case '\\' -> 0x5c;
+                default -> cc[i + 1];
+                }));
                 i += 1;
                 continue;
             }
