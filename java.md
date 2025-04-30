@@ -67,66 +67,47 @@ public class RedisHexAsBytes {
 //        byte[] raw = new byte[3351];
         for (int i = 0; i < s; i ++) {
             char c = cc[i];
-            System.out.println(c);
             if (i < s - 1 && c == '\\' && cc[i + 1] == 'x') {
-                System.out.println(">> " + cc[i + 2] + "" + cc[i + 3]);
                 bb.put((byte) (Integer.parseInt(cc[i + 2] + "" + cc[i + 3], 16) & 0xff));
-//                raw[len ++] = (byte) (Integer.parseInt(cc[i + 2] + "" + cc[i + 3], 16) & 0xff);
                 i += 3;
                 continue;
             }
             if (i < s - 1 && c == '\\' && cc[i + 1] == 'r') {
-                System.out.println(">> \\r");
                 bb.put((byte) ('\r'));
-//                raw[len ++] = (byte) (Integer.parseInt(cc[i + 2] + "" + cc[i + 3], 16) & 0xff);
                 i += 1;
                 continue;
             }
             if (i < s - 1 && c == '\\' && cc[i + 1] == 'n') {
-                System.out.println(">> \\n");
                 bb.put((byte) ('\n'));
-//                raw[len ++] = (byte) (Integer.parseInt(cc[i + 2] + "" + cc[i + 3], 16) & 0xff);
                 i += 1;
                 continue;
             }
             if (i < s - 1 && c == '\\' && cc[i + 1] == 't') {
-                System.out.println(">> \\t");
                 bb.put((byte) ('\t'));
-//                raw[len ++] = (byte) (Integer.parseInt(cc[i + 2] + "" + cc[i + 3], 16) & 0xff);
                 i += 1;
                 continue;
             }
             if (i < s - 1 && c == '\\' && cc[i + 1] == 'b') {
-                System.out.println(">> \\b");
                 bb.put((byte) ('\b'));
-//                raw[len ++] = (byte) (Integer.parseInt(cc[i + 2] + "" + cc[i + 3], 16) & 0xff);
                 i += 1;
                 continue;
             }
             if (i < s - 1 && c == '\\' && cc[i + 1] == 'a') {
-                System.out.println(">> \\a");
                 bb.put((byte) 0x07);
-//                raw[len ++] = (byte) (Integer.parseInt(cc[i + 2] + "" + cc[i + 3], 16) & 0xff);
                 i += 1;
                 continue;
             }
             if (i < s - 1 && c == '\\' && cc[i + 1] == '"') {
-                System.out.println(">> \"");
                 bb.put((byte) ('"'));
-//                raw[len ++] = (byte) (Integer.parseInt(cc[i + 2] + "" + cc[i + 3], 16) & 0xff);
                 i += 1;
                 continue;
             }
             if (i < s - 1 && c == '\\' && cc[i + 1] == '\\') {
-                System.out.println(">> \\");
                 bb.put((byte) ('\\'));
-//                raw[len ++] = (byte) (Integer.parseInt(cc[i + 2] + "" + cc[i + 3], 16) & 0xff);
                 i += 1;
                 continue;
             }
             bb.put((byte) c);
-            System.out.println(">> " + c);
-//            raw[len ++] = (byte) c;
         }
         int size = bb.position();
         bb.flip();
