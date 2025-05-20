@@ -198,3 +198,26 @@ echo "" >> c.out
 
 
 ```
+
+
+## history
+
+```bash
+# 在~/.bashrc增加
+# history
+# 控制内存中存储的历史命令数量
+export HISTSIZE=10000
+# 控制历史文件中存储的命令数量
+export HISTFILESIZE=10000
+# 控制历史记录的过滤（如去重)
+# ignoredups   # 忽略连续重复的命令
+# erasedups    # 删除历史中所有重复的命令
+export HISTCONTROL=ignoredups
+# 设置不记录的命令（用 `:` 分隔）
+export HISTIGNORE="ls:history:pwd:ll"
+# 设置 `history` 时间显示格式
+export HISTTIMEFORMAT="%F %T "
+
+# 生效
+. ~/.bashrc
+```
