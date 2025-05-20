@@ -90,3 +90,110 @@ echo "$lag" >> lag.out
 echo "" >> lag.out
 
 ```
+
+
+## kafka消费设置偏移量
+
+```java
+
+package com.tqbb.test;
+
+import java.io.FileOutputStream;
+import java.time.Duration;
+import java.time.LocalDateTime;
+import java.util.Collections;
+import java.util.List;
+import java.util.Properties;
+
+import org.apache.kafka.clients.consumer.ConsumerConfig;
+import org.apache.kafka.clients.consumer.ConsumerRecord;
+import org.apache.kafka.clients.consumer.ConsumerRecords;
+import org.apache.kafka.clients.consumer.KafkaConsumer;
+import org.apache.kafka.common.TopicPartition;
+import org.apache.kafka.common.serialization.StringDeserializer;
+import org.apache.kafka.streams.KeyValue;
+import org.apache.kafka.streams.StreamsBuilder;
+import org.apache.kafka.streams.kstream.Printed;
+import org.apache.kafka.streams.processor.api.Processor;
+import org.apache.kafka.streams.processor.api.ProcessorContext;
+import org.apache.kafka.streams.processor.api.ProcessorSupplier;
+import org.apache.kafka.streams.processor.api.Record;
+
+import com.alibaba.fastjson2.JSON;
+import com.alibaba.fastjson2.util.DateUtils;
+
+import lombok.Data;
+import lombok.SneakyThrows;
+import lombok.experimental.Accessors;
+
+/**
+ *
+ * @author luoyh(Roy) - Oct 11, 2024
+ * @since 21
+ */
+public class KafkaTestGPSPrint3 {
+
+    public static void main(String[] args) {
+        Properties props = new Properties();
+        props.put(ConsumerConfig.GROUP_ID_CONFIG, "test-kafka-gps-consumer");
+        props.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, "tqxing-kafka.tqxing-common:31514");
+        props.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class.getName());
+        props.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class.getName());
+        props.put(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, "latest");
+
+        final String outFile = "e:/.roy/tmp/gps/test-gps-%s.log".formatted(System.currentTimeMillis());
+        gps1(props, outFile);
+    }
+
+    @SneakyThrows
+    private static void gps1(Properties consumerProperties, final String outFile) {
+        
+        try (KafkaConsumer<String, String> consumer = new KafkaConsumer<>(consumerProperties);
+                FileOutputStream out = new FileOutputStream(outFile);
+                ) {
+            //List<TopicPartition> partitions = consumer.partitionsFor("jt808_trajectory_topic").stream().map(p -> new TopicPartition(p.topic(), 0)).toList();
+            //consumer.assign(partitions);
+            consumer.assign(Collections.singletonList(new TopicPartition("jt808_trajectory_topic", 0)));
+            consumer.seek(new TopicPartition("jt808_trajectory_topic", 0), 759036165L);
+//            consumer.subscribe(Collections.singletonList("jt808_trajectory_topic"));
+            
+            while (true) {
+                ConsumerRecords<String, String> records = consumer.poll(Duration.ofSeconds(10));
+                for (ConsumerRecord<String, String> rec : records) {
+                    if (rec.value().indexOf("40934854390") > -1) {
+                        out.write(("[" + DateUtils.format(rec.timestamp()) + "]:[" + rec.offset() + "]:" + rec.value() + System.lineSeparator()).getBytes());
+                    }
+                }
+                out.flush();
+                if (records.isEmpty()) {
+                    Thread.sleep(Duration.ofSeconds(2));
+                }
+            }
+        }
+    }
+    
+    @SneakyThrows
+    private static void gps(Properties consumerProperties, final String outFile) {
+        
+        try (KafkaConsumer<String, String> consumer = new KafkaConsumer<>(consumerProperties);
+                FileOutputStream out = new FileOutputStream(outFile);
+                ) {
+            consumer.subscribe(Collections.singletonList("jt808_trajectory_topic"));
+            
+            while (true) {
+                ConsumerRecords<String, String> records = consumer.poll(Duration.ofSeconds(10));
+                for (ConsumerRecord<String, String> rec : records) {
+                    if (rec.value().indexOf("40934854390") > -1) {
+                        out.write(("[" + DateUtils.format(rec.timestamp()) + "]:[" + rec.offset() + "]:" + rec.value() + System.lineSeparator()).getBytes());
+                    }
+                }
+                out.flush();
+                if (records.isEmpty()) {
+                    Thread.sleep(Duration.ofSeconds(2));
+                }
+            }
+        }
+    }
+}
+
+```
