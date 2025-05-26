@@ -125,12 +125,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "tcpdump.md",
+                "file": "editplus.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "tcpdump"
+              "title": "editplus"
             }
           }
         ],
@@ -290,8 +290,8 @@
   },
   "active": "e888f146099d0df2",
   "lastOpenFiles": [
-    "k8s.md",
     "tcpdump.md",
+    "k8s.md",
     "kafka.md",
     "java.md",
     "Linux.md",
