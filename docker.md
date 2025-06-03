@@ -78,3 +78,45 @@ COPY simkai.ttf /usr/share/fonts/TTF/simkai.ttf
 #ENTRYPOINT [ "java" ]
 
 ```
+
+
+## openjdk-alpine-wkhtmltopdf
+
+```dockerfile
+FROM surnet/alpine-wkhtmltopdf:3.21.3-024b2b2-full
+FROM alpine:3.21
+
+RUN echo http://mirrors.aliyun.com/alpine/v3.21/main/ > /etc/apk/repositories && \
+    echo http://mirrors.aliyun.com/alpine/v3.21/community/ >> /etc/apk/repositories
+RUN apk update && apk upgrade
+RUN apk add --no-cache curl wget ca-certificates libgcc libstdc++ ncurses-libs bash
+
+ENV JAVA_HOME=/usr/lib/jvm/default-jvm
+
+RUN apk add --no-cache --update openjdk21 && \
+    ln -sf "${JAVA_HOME}/bin/"* "/usr/bin/"
+
+RUN apk --no-cache add ttf-dejavu fontconfig
+
+COPY --from=surnet/alpine-wkhtmltopdf:3.21.3-024b2b2-full /bin/wkhtmltopdf /bin/wkhtmltopdf
+COPY --from=surnet/alpine-wkhtmltopdf:3.21.3-024b2b2-full /bin/wkhtmltoimage /bin/wkhtmltoimage
+COPY --from=surnet/alpine-wkhtmltopdf:3.21.3-024b2b2-full /lib/libwkhtmltox* /lib/
+COPY simkai.ttf /usr/share/fonts/TTF/simkai.ttf
+
+RUN rm -rf /var/cache/apk/*
+
+```
+
+## springboot-wkhtml2pdf
+
+```dockerfile
+FROM openjdk-wkhtml2pdf:21
+RUN mkdir -p /opt && chmod -R 777 /opt
+COPY app.jar /opt/app.jar
+
+WORKDIR /opt
+EXPOSE 80
+
+CMD ["java","-Dserver.port=80","-Dcom.tqbb.html2pdf.localTest=false", "-jar", "/opt/app.jar"]
+
+```
