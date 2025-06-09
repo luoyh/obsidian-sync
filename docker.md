@@ -120,3 +120,23 @@ EXPOSE 80
 CMD ["java","-Dserver.port=80","-Dcom.tqbb.html2pdf.localTest=false", "-jar", "/opt/app.jar"]
 
 ```
+
+
+## ubuntu docker 支持中文
+
+```bash
+docker pull ubuntu:24.04
+docker pull ubuntu:latest
+docker run -ti -d --name ubt ubuntu:latest bash
+
+docker exec -ti ubt bash
+> apt get update
+> apt install -y language-pack-zh-hans
+> locale
+> vim ~/.bashrc
+#> export LANG=zh_CN.UTF-8
+#> export LC_ALL=zh_CN.UTF-8
+> source ~/.bashrc
+
+
+```
