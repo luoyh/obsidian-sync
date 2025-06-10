@@ -225,9 +225,15 @@ export HISTTIMEFORMAT="%F %T "
 ## 在目录下查找文件内容包含字符串
 
 ```bash
-grep -r "hello" /path/to/directory
 # `-r` 或 `-R`：递归搜索子目录
 # `-i`：忽略大小写（如需搜索"Hello"、"HELLO"等变体）
 # `-l`：只显示包含匹配项的文件名而不显示具体内容
 # `-n`：显示匹配行号
+grep -r "hello" /path/to/directory
+
+# 示例（忽略大小写并只显示文件名）：
+grep -ril "hello" /path/to/directory
+
+# 使用find配合grep
+find /path/to/directory -type f -exec grep -l "hello" {} +
 ```
