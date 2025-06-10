@@ -221,3 +221,13 @@ export HISTTIMEFORMAT="%F %T "
 # 生效
 . ~/.bashrc
 ```
+
+## 在目录下查找文件内容包含字符串
+
+```bash
+grep -r "hello" /path/to/directory
+# `-r` 或 `-R`：递归搜索子目录
+# `-i`：忽略大小写（如需搜索"Hello"、"HELLO"等变体）
+# `-l`：只显示包含匹配项的文件名而不显示具体内容
+# `-n`：显示匹配行号
+```
