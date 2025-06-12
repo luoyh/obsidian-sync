@@ -140,3 +140,27 @@ docker exec -ti ubt bash
 
 
 ```
+
+## go-wkhtmltopdf
+
+```Dockerfile
+FROM ubuntu:24.04
+RUN apt-get update \
+  && apt-get install -y wget curl tar \
+  && apt-get install -y fontconfig locales language-pack-zh-hans
+
+ENV LANG zh_CN.UTF-8
+ENV LC_ALL=zh_CN.UTF-8
+RUN mkdir -p /opt/lib
+RUN mkdir -p /opt/app
+COPY wkhtmltox_0.12.6.1-2.jammy_amd64.deb /opt/lib/wkhtmltox_0.12.6.1-2.jammy_amd64.deb
+RUN apt-get install -y --no-install-recommends /opt/lib/wkhtmltox_0.12.6.1-2.jammy_amd64.deb
+COPY simkai.ttf /usr/share/fonts/truetype/simkai.ttf
+COPY main /opt/app/main
+RUN rm -rf /opt/lib/wkhtmltox_0.12.6.1-2.jammy_amd64.deb
+
+WORKDIR /opt/app
+expose 8080
+CMD ["./main"]
+
+```
