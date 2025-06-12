@@ -43,6 +43,7 @@ public class TestHtml2Pdf {
             fontProvider.addFont(fontPath);
             converterProperties.setFontProvider(fontProvider);
             // 支持书签
+            // 或者使用OutlineHandler.createStandardHandler()
             converterProperties.setOutlineHandler(new ChangedOutlineHandler());
             HtmlConverter.convertToPdf("""
                     <!DOCTYPE html>
@@ -141,7 +142,144 @@ public class TestHtml2Pdf {
 
 ```
 
+## 支持toc
 
+```html
+<html>
+  <body>
+
+    <div class="toc-container">
+      <div class="toc-row"><a href="#one">Link To Page One</a></div>
+      <div class="toc-row"><a href="#two">Link To Page Two</a></div>
+    </div>
+
+    <div class="content-container">
+      <div class="page" id="one">Page One Content Here</div>
+      <div class="page" id="two">Page Two Content Here</div>
+    </div>
+
+  </body>
+</html>
+```
+
+```css
+.toc-row a::after {
+  content: leader('.') target-counter(attr(href), page, decimal);
+}
+```
+
+```java
+package com.tqbb.test.pdf;
+
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.OutputStream;
+import java.util.UUID;
+
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
+import org.jsoup.parser.Tag;
+import org.jsoup.select.Elements;
+
+import com.itextpdf.html2pdf.ConverterProperties;
+import com.itextpdf.html2pdf.HtmlConverter;
+import com.itextpdf.html2pdf.attach.impl.OutlineHandler;
+import com.itextpdf.layout.font.FontProvider;
+
+import lombok.SneakyThrows;
+
+/**
+ *
+ * @author luoyh(Roy) - Jun 12, 2025
+ * @since 21
+ */
+public class Itext2pdfTest002 {
+
+    @SneakyThrows
+    public static void main(String[] args) {
+        try (OutputStream outputStream = new FileOutputStream(PDFCons.outpdf());
+                //FileInputStream inputStream = new FileInputStream(new File(PDFCons.normal));
+                
+                ) {
+            Document htmlDoc = Jsoup.parse(new File("D:/.work/.tmp/html/04.html"), "UTF-8");
+
+            // This is our Table of Contents aggregating element
+            Element tocElement = htmlDoc.select("#content").first().prependElement("div");
+            //Element tocElement = htmlDoc.body().prependElement("div");
+            tocElement.append("<p style=\"page-break-before:always;\"></p>");
+            tocElement.append("<p style=\"text-align: center;\"><b>目录</b></p>");
+
+            // We are going to build a complex CSS
+            StringBuilder tocStyles = new StringBuilder().append("<style>");
+
+            Elements tocElements = htmlDoc.select("H1,h2,h3,h4,h5,h6");
+            int idx = 0;
+            
+            for (Element elem : tocElements) {
+                int t = switch (elem.tagName()) {
+                case "h1" -> 0;
+                case "h2" -> 1;
+                case "h3" -> 2;
+                case "h4" -> 3;
+                case "h5" -> 4;
+                case "h6" -> 5;
+                default -> 0;
+                };
+                // Here we create an anchor to be able to refer to this element when generating
+                // page numbers and links
+                String id = "_toc_h_" + (idx ++);//UUID.randomUUID().toString();
+                elem.attr("id", id);
+
+                // CSS selector to show page numebr for a TOC entry
+                tocStyles.append("*[data-toc-id=\"" + id + "\"] .toc-page-ref::after { content: target-counter(#" + id
+                        + ", page) }");
+
+                // Generating TOC entry as a small table to align page numbers on the right
+                Element tocEntry = tocElement.appendElement("table");
+                tocEntry.attr("style", "width: 100%; border: none;");
+                Element tocEntryRow = tocEntry.appendElement("tr");
+                tocEntryRow.attr("data-toc-id", id);
+                tocEntryRow.attr("style", "boder: none;");
+                Element tocEntryTitle = tocEntryRow.appendElement("td");
+                tocEntryTitle.attr("style", "border: none;");
+                tocEntryTitle.append("<span style=\"margin-left: " + (40 * t) + "px;\">"+elem.text()+"</span>");
+                Element tocEntryPageRef = tocEntryRow.appendElement("td");
+                tocEntryPageRef.attr("style", "text-align: right; border: none;");
+                // <span> is a placeholder element where target page number will be inserted
+                // It is wrapped by an <a> tag to create links pointing to the element in our
+                // document
+                tocEntryPageRef.append("<a href=\"#" + id + "\"><span class=\"toc-page-ref\"></span></a>");
+            }
+
+            tocStyles.append("</style>");
+
+            htmlDoc.head().append(tocStyles.toString());
+
+            String html = htmlDoc.outerHtml();
+
+            
+//            
+            System.out.println(html);
+            
+            ConverterProperties converterProperties = new ConverterProperties();
+            FontProvider fontProvider = new FontProvider();
+            fontProvider.addFont(PDFCons.fontPath);
+            converterProperties.setFontProvider(fontProvider);
+            converterProperties.setOutlineHandler(OutlineHandler.createStandardHandler());
+//            converterProperties.setTagWorkerFactory(DefaultTagWorkerFactory.getInstance());
+            System.out.println(converterProperties.getTagWorkerFactory());
+//            converterProperties.setImmediateFlush(true);
+//            converterProperties.setLimitOfLayouts(3);
+            HtmlConverter.convertToPdf(html, outputStream, converterProperties);
+        }
+        System.out.println("PDF created successfully.");
+    }
+
+}
+
+
+```
 ### use selenium
 
 ```xml
