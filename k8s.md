@@ -15,5 +15,7 @@
 # cp
 > kubectl cp <pod name>:/a/b.txt /b.txt -n <namespace>
 
+# delete pod then auto restart
+> kubectl delete pod <pod name> -n <namespace>
 
 ```
