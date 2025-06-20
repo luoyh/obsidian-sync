@@ -21,6 +21,9 @@ bin/kafka-console-consumer.sh --bootstrap-server 127.0.0.1:9092 --topic test-top
 
 # 消费指定partition
 bin/kafka-console-consumer.sh --bootstrap-server 127.0.0.1:9092 --topic test-topic --offset 1234 --partition 0
+
+# 发送消息
+bin/kafka-console-producer.sh  --bootstrap-server 127.0.0.1:9092 --topic test-topic
 ```
 
 ## kakfa代理转发
