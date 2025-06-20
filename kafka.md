@@ -13,9 +13,14 @@
 # 查看topic信息
 ./kafka-topics.sh --describe  --bootstrap-server 127.0.0.1:9092 --topic test-topic
 
-
+# 修改partition
 bin/kafka-topics.sh --bootstrap-server localhost:9092 --alter --topic my_topic_name --partitions 40
 
+# 消费
+bin/kafka-console-consumer.sh --bootstrap-server 127.0.0.1:9092 --topic test-topic [--from-beginning]
+
+# 消费指定partition
+bin/kafka-console-consumer.sh --bootstrap-server 127.0.0.1:9092 --topic test-topic --offset 1234 --partition 0
 ```
 
 ## kakfa代理转发
