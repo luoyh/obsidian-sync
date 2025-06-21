@@ -1,6 +1,48 @@
 
 ## docker set proxy and wsl set clash
 
+### docker配置service启动
+```bash
+# 下载docker二进制
+wget https://download.docker.com/linux/static/stable/x86_64/docker-28.2.2.tgz
+tar zxvf docker-28.2.2.tgz
+cp docker/* /usr/bin/
+# 下载service
+wget https://raw.githubusercontent.com/moby/moby/master/contrib/init/systemd/docker.service
+wget https://raw.githubusercontent.com/moby/moby/master/contrib/init/systemd/docker.socket
+wget https://raw.githubusercontent.com/containerd/containerd/refs/heads/main/containerd.service
+# 修改docker.socket的用户组为root
+SocketGroup=root
+# 可以看下containerd.service的containerd是不是指向/usr/bin/containerd
+
+# 复制文件到system
+cp docker.service /etc/systemd/system/
+cp docker.socket /etc/systemd/system/
+cp containerd.service /etc/systemd/system/
+
+# 看下是否授权
+chmod a+x /etc/systemd/system/docker.service
+# 查看依赖
+systemctl list-dependencies docker.service
+
+# 修改默认docker目录
+vim /etc/docker/daemon.json
+{
+    "data-root": "/data/docker"
+}
+
+# 可使用dockerd检查是否成功
+/usr/bin/dockerd
+
+# 安装iptables
+apt install -y iptables
+
+# 启动
+systemctl start docker
+# service docker start
+
+```
+
 ```bash
 
 vim ~/.bashrc
