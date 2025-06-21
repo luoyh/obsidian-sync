@@ -28,7 +28,12 @@ systemctl list-dependencies docker.service
 # 修改默认docker目录
 vim /etc/docker/daemon.json
 {
-    "data-root": "/data/docker"
+    "data-root": "/data/docker",
+    "proxies": {
+        "http-proxy": "http://host.local:7890",
+        "https-proxy": "http://host.local:7890",
+        "no-proxy": "localhost,127.0.0.1"
+    }
 }
 
 # 可使用dockerd检查是否成功
