@@ -280,6 +280,163 @@ public class Itext2pdfTest002 {
 
 
 ```
+
+
+### html2转pdf, 支持书签与目录,并且目录支持跳转
+
+```java
+package com.tqbb.test.pdf;
+
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.util.ArrayDeque;
+import java.util.Deque;
+
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
+
+import com.itextpdf.commons.datastructures.Tuple2;
+import com.itextpdf.html2pdf.ConverterProperties;
+import com.itextpdf.html2pdf.HtmlConverter;
+import com.itextpdf.kernel.pdf.PdfDocument;
+import com.itextpdf.kernel.pdf.PdfOutline;
+import com.itextpdf.kernel.pdf.PdfWriter;
+import com.itextpdf.kernel.pdf.action.PdfAction;
+import com.itextpdf.layout.font.FontProvider;
+import com.tqbb.test.util.IdWorker;
+
+import lombok.SneakyThrows;
+
+/**
+ *
+ * @author luoyh(Roy) - Jun 12, 2025
+ * @since 21
+ */
+public class Itext2pdfTest3 {
+
+    @SneakyThrows
+    public static void main(String[] args) {
+
+    try (
+            ByteArrayOutputStream out = new ByteArrayOutputStream();
+            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(
+            //PDFCons.outpdf()
+            out
+            ))) {
+        PdfOutline bookmarks = pdfDocument.getOutlines(false);
+//        try (OutputStream outputStream = new FileOutputStream(PDFCons.outpdf());
+//                //FileInputStream inputStream = new FileInputStream(new File(PDFCons.normal));
+//                
+//                ) {
+            Document htmlDoc = Jsoup.parse(new File("D:/.work/.tmp/html/07.html"), "UTF-8");
+            
+    
+             // This is our Table of Contents aggregating element
+             Element tocElement = htmlDoc.body().prependElement("div");
+             tocElement.append("<p style=\"page-break-before:always;\"></p>");
+             tocElement.append("<h1 style=\"text-align: center;font-size:20px;\"><b>目录</b></h1>");
+    
+             // We are going to build a complex CSS
+             StringBuilder tocStyles = new StringBuilder().append("<style>");
+             Elements tocElements = htmlDoc.select("h1,h2,h3,h4,h5,h6");
+             Deque<Tuple2<Integer, PdfOutline>> stack = new ArrayDeque<>();
+             for (Element elem : tocElements) {
+                 int t = switch (elem.tagName()) {
+                 case "h1" -> 0;
+                 case "h2" -> 1;
+                 case "h3" -> 2;
+                 case "h4" -> 3;
+                 case "h5" -> 4;
+                 case "h6" -> 5;
+                 default -> 0;
+                 };
+                 // Here we create an anchor to be able to refer to this element when generating page numbers and links
+                 String id = elem.attr("id");
+                 if (id == null || id.isEmpty()) {
+                     id = "x" + IdWorker.id();
+                     elem.attr("id", id);
+                 }
+
+                 // CSS selector to show page numbers for a TOC entry
+                 tocStyles.append("*[data-toc-id=\"").append(id)
+                         .append("\"] .toc-page-ref::after { content: target-counter('#").append(id).append("', page) }");
+
+                 // Generating TOC entry as a small table to align page numbers on the right
+                 Element tocEntry = tocElement.appendElement("div");
+                 tocEntry.attr("style", "width: 100%; border-bottom: 1px dashed rgb(200,200,200);text-align:left; ");
+                 Element tocEntryRow = tocEntry.appendElement("a");
+                 tocEntryRow.attr("data-toc-id", id);
+                 tocEntryRow.attr("style", "boder: none;text-decoration:none; color: black;");
+                 tocEntryRow.attr("href", "#" + id);
+                 tocEntryRow.append("<span style=\"width:"+(20 * t)+"px;display: inline-block;\"></span>");
+                 Element tocEntryTitle = tocEntryRow.appendElement("span");
+//                 tocEntryTitle.attr("style", "padding-left:" + (10 * t) + "px;");
+//                 tocEntryTitle.append("<span style=\"margin-left: " + (20 * t) + "px;\">"+elem.text()+"</span>");
+                 tocEntryTitle.appendText(elem.text());
+                 Element tocEntryPageRef = tocEntryRow.appendElement("span");
+                 tocEntryPageRef.attr("style", "float:right;");
+                 tocEntryPageRef.attr("class", "toc-page-ref");
+                 
+                 // <span> is a placeholder element where target page number will be inserted
+                 // It is wrapped by an <a> tag to create links pointing to the element in our
+                 // document
+//                 tocEntryPageRef.append("<span class=\"toc-page-ref\" style=\"float:right;\"></span>");
+                 
+                 PdfOutline bookmark = null;
+                 Tuple2<Integer, PdfOutline> poll = null;
+                 while ((poll = stack.poll()) != null) {
+                     if (poll.getFirst() < t) {
+                         bookmark = poll.getSecond().addOutline(elem.text());
+                         stack.push(poll);
+                         break;
+                     }
+                 }
+                 
+                 if (null == bookmark) {
+                     bookmark = bookmarks.addOutline(elem.text());
+                 }
+                 
+                 stack.push(new Tuple2<Integer, PdfOutline>(t, bookmark));
+                 
+
+                 //PdfOutline bookmark = bookmarks.addOutline(elem.text());
+                 bookmark.addAction(PdfAction.createGoTo(id));
+             }
+    
+             tocStyles.append("</style>");
+    
+             htmlDoc.head().append(tocStyles.toString());
+    
+             String html = htmlDoc.outerHtml();
+            
+            System.out.println(html);
+            
+            
+            ConverterProperties converterProperties = new ConverterProperties();
+            FontProvider fontProvider = new FontProvider();
+            fontProvider.addFont(PDFCons.fontPath);
+            converterProperties.setFontProvider(fontProvider);
+//            converterProperties.setOutlineHandler(OutlineHandler.createStandardHandler());
+            converterProperties.setImmediateFlush(false);
+//            converterProperties.setTagWorkerFactory(DefaultTagWorkerFactory.getInstance());
+            System.out.println(converterProperties.getTagWorkerFactory());
+//            converterProperties.setImmediateFlush(true);
+//            converterProperties.setLimitOfLayouts(3);
+            HtmlConverter.convertToPdf(html, pdfDocument, converterProperties);
+            
+            Files.write(Paths.get(PDFCons.outpdf()), out.toByteArray());
+        }
+        System.out.println("PDF created successfully.");
+    }
+
+}
+
+```
+
 ### use selenium
 
 ```xml
