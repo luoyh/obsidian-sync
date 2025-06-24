@@ -284,6 +284,8 @@ public class Itext2pdfTest002 {
 
 ### html2转pdf, 支持书签与目录,并且目录支持跳转
 
+`https://kb.itextpdf.com/itext/adding-bookmarks-table-of-contents-to-a-pdfhtml-co`
+
 ```java
 package com.tqbb.test.pdf;
 
