@@ -43,3 +43,25 @@ export HISTIGNORE="ls:exit:history:pwd:ll"
 export HISTTIMEFORMAT="[%F %T]: "
 
 ```
+
+### 开启ssh
+
+```bash
+apt update
+apt install -y openssh-server
+vim /etc/ssh/sshd_config
+
+    Port 62222
+    #AddressFamily any
+    ListenAddress 0.0.0.0
+    PasswordAuthentication yes
+    PermitRootLogin yes
+
+## windows
+C:\WINDOWS\system32>netsh interface portproxy add v4tov4 listenaddress=0.0.0.0 listenport=62222 connectaddress=172.19.198.135 connectport=62222
+C:\WINDOWS\system32>netsh advfirewall firewall add rule name=WSL2 dir=in action=allow protocol=TCP localport=62222
+
+
+
+```
+
