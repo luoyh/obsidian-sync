@@ -41,12 +41,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "kafka.md",
+                "file": "editplus.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "kafka"
+              "title": "editplus"
             }
           }
         ],
@@ -206,10 +206,10 @@
   },
   "active": "5bc6a4e28343b1a1",
   "lastOpenFiles": [
+    "kafka.md",
     "flink.md",
     "graalvm.md",
     "html2pdf.md",
-    "kafka.md",
     "docker.md",
     "wsl.md",
     "spring.md",
