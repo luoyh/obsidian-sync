@@ -24,8 +24,14 @@ bin/kafka-console-consumer.sh --bootstrap-server 127.0.0.1:9092 --topic test-top
 
 # 发送消息
 bin/kafka-console-producer.sh  --bootstrap-server 127.0.0.1:9092 --topic test-topic
-```
 
+kafka-consumer-groups.sh --bootstrap-server kafka-host:9092 --group my-group --reset-offsets --to-earliest --all-topics --execute
+
+kafka-consumer-groups.sh --bootstrap-server kafka-host:9092 --group my-group --reset-offsets --to-earliest --all-topics --execute
+
+kafka-consumer-groups.sh  --bootstrap-server localhost:9092 --group my-consumer --reset-offsets --to-offset  398833671 --topic my-topic --execute
+
+```
 ## kakfa代理转发
 
 kakfa代理, 比如在kafka的server.properties配置的是 
