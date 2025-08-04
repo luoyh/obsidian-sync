@@ -13,12 +13,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "kafka.md",
+                "file": "Linux.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "kafka"
+              "title": "Linux"
             }
           }
         ]
@@ -177,6 +177,7 @@
   },
   "active": "ca819daff93be9f6",
   "lastOpenFiles": [
+    "kafka.md",
     "www.duanxu.online/使用 Java AIO 实现简易内网穿透.md",
     "imgs/Pasted image 20250728110401.png",
     "www.duanxu.online/通过 Java 实现《魔兽争霸3：冰封王座》局域网连接实战.md",
@@ -187,7 +188,6 @@
     "Untitled.md",
     "Biology.md",
     "报警.md",
-    "kafka.md",
     "www.duanxu.online",
     "editplus.md",
     "flink.md",

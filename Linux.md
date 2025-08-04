@@ -237,3 +237,23 @@ grep -ril "hello" /path/to/directory
 # 使用find配合grep
 find /path/to/directory -type f -exec grep -l "hello" {} +
 ```
+
+
+## op
+
+```bash
+# 查看硬盘类型, rota: 0-ssd,1-hdd
+[root@vvtf ~]# lsblk -d -o name,rota,size,model
+NAME ROTA  SIZE MODEL
+sda     0  800G Virtual disk    
+sr0     1 1024M VMware SATA CD00
+
+# fio随机读写测试
+# --rwmixread=25, 表示读25%,写75%
+# --readwrite=randrw,表示随机读写
+fio --randrepeat=1 --ioengine=libaio --direct=1 --gtod_reduce=1 --name=test --bs=4k --iodepth=64 --size=4G --readwrite=randrw --rwmixread=25 --filename=random_read_write2.fio
+
+# linux kdump 内核崩溃的日志
+/var/crash/{time}/*
+# 可使用crash命令查看分析
+```
