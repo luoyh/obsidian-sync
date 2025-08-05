@@ -13,12 +13,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "Linux.md",
+                "file": "kafka.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "Linux"
+              "title": "kafka"
             }
           }
         ]
@@ -177,6 +177,7 @@
   },
   "active": "ca819daff93be9f6",
   "lastOpenFiles": [
+    "Linux.md",
     "kafka.md",
     "www.duanxu.online/使用 Java AIO 实现简易内网穿透.md",
     "imgs/Pasted image 20250728110401.png",
@@ -199,7 +200,6 @@
     "java.md",
     "k8s.md",
     "java apm.md",
-    "Linux.md",
     "tcpdump.md",
     "maven.md",
     "tshark.md",
