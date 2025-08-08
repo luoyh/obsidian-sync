@@ -27,12 +27,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "go.md",
+                "file": "kafka.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "go"
+              "title": "kafka"
             }
           }
         ],
@@ -192,8 +192,8 @@
   },
   "active": "d522c72e5cd74ea0",
   "lastOpenFiles": [
-    "kafka.md",
     "go.md",
+    "kafka.md",
     "Linux.md",
     "www.duanxu.online/使用 Java AIO 实现简易内网穿透.md",
     "imgs/Pasted image 20250728110401.png",
