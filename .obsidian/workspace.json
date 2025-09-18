@@ -69,12 +69,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "kafka.md",
+                "file": "upwd/Untitled.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "kafka"
+              "title": "Untitled"
             }
           }
         ],
@@ -233,10 +233,12 @@
       "obsidian-git:Open Git source control": false
     }
   },
-  "active": "05287a3875c43ad4",
+  "active": "7221380de633211b",
   "lastOpenFiles": [
-    "ce.md",
     "kafka.md",
+    "upwd/Untitled.md",
+    "upwd",
+    "ce.md",
     "go.md",
     "Linux.md",
     "www.duanxu.online/使用 Java AIO 实现简易内网穿透.md",
@@ -264,7 +266,6 @@
     "maven.md",
     "tshark.md",
     "Untitled 1",
-    "redis.md",
     "graalvm",
     "Untitled",
     "2410",
@@ -280,7 +281,6 @@
     "media server/images/Pasted image 20240903152215.png",
     "media server/images/Pasted image 20240903152154.png",
     "media server/images/Pasted image 20240903152141.png",
-    "Untitled.canvas",
-    "media server"
+    "Untitled.canvas"
   ]
 }
