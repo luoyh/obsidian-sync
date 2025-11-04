@@ -1165,6 +1165,302 @@ public class ProcessMemoryReader {
     }
 }
 
+package ce;
+
+import com.sun.jna.Native;
+import com.sun.jna.Pointer;
+import com.sun.jna.Structure;
+import com.sun.jna.platform.win32.WinDef;
+import com.sun.jna.platform.win32.WinNT;
+import com.sun.jna.ptr.IntByReference;
+import com.sun.jna.win32.StdCallLibrary;
+
+public interface Kernel32 extends StdCallLibrary {
+    Kernel32 INSTANCE = Native.load("kernel32", Kernel32.class);
+
+    // 内存状态常量
+    int MEM_COMMIT = 0x1000;
+    int MEM_RESERVE = 0x2000;
+    int MEM_FREE = 0x10000;
+
+    // 内存保护常量
+    int PAGE_READONLY = 0x02;
+    int PAGE_READWRITE = 0x04;
+    int PAGE_EXECUTE_READ = 0x20;
+    int PAGE_EXECUTE_READWRITE = 0x40;
+
+    // VirtualQueryEx函数
+    int VirtualQueryEx(WinNT.HANDLE hProcess, Pointer lpAddress, MEMORY_BASIC_INFORMATION lpBuffer, int dwLength);
+
+    // ReadProcessMemory函数
+    boolean ReadProcessMemory(WinNT.HANDLE hProcess, Pointer lpBaseAddress, Pointer lpBuffer, int nSize,
+            IntByReference lpNumberOfBytesRead);
+
+    // WriteProcessMemory函数
+    boolean WriteProcessMemory(WinNT.HANDLE hProcess, Pointer lpBaseAddress,
+                              Pointer lpBuffer, int nSize, IntByReference lpNumberOfBytesWritten);
+ 
+    // OpenProcess函数
+    WinNT.HANDLE OpenProcess(int dwDesiredAccess, boolean bInheritHandle, int dwProcessId);
+
+    // VirtualProtectEx函数
+    boolean VirtualProtectEx(WinNT.HANDLE hProcess, Pointer lpAddress,
+                            int dwSize, int flNewProtect, 
+                            IntByReference lpflOldProtect);
+    // CloseHandle函数
+    boolean CloseHandle(WinNT.HANDLE hObject);
+
+    int GetLastError();
+
+
+    // 进程访问权限
+    int PROCESS_QUERY_INFORMATION = 0x0400;
+    int PROCESS_VM_READ = 0x0010;
+
+    // MEMORY_BASIC_INFORMATION结构体
+    public static class MEMORY_BASIC_INFORMATION extends Structure {
+        public static class ByReference extends MEMORY_BASIC_INFORMATION implements Structure.ByReference {}
+        public Pointer BaseAddress;
+        public Pointer AllocationBase;
+        public int AllocationProtect;
+        public Pointer RegionSize;
+        public int State;
+        public int Protect;
+        public int Type;
+
+        @Override
+        protected java.util.List<String> getFieldOrder() {
+            return java.util.Arrays.asList("BaseAddress", "AllocationBase", "AllocationProtect", "RegionSize", "State",
+                    "Protect", "Type");
+        }
+    }
+}
+
+
+package ce;
+import java.util.List;
+
+import com.sun.jna.Memory;
+import com.sun.jna.Pointer;
+import com.sun.jna.platform.win32.WinNT;
+import com.sun.jna.ptr.IntByReference;
+
+public class MemoryModifier {
+    
+    /**
+     * 修改进程内存中的整数值
+     * @param processId 进程ID
+     * @param address 内存地址
+     * @param oldValue 旧值（用于验证）
+     * @param newValue 新值
+     * @param valueSize 值大小（4=32位，8=64位）
+     * @return 是否修改成功
+     */
+    public static boolean modifyIntegerValue(WinNT.HANDLE hProcess, long address, long newValue, int valueSize) {
+        try {
+            // 第二步：修改内存权限（如果需要）
+            if (!setMemoryProtection(hProcess, address, valueSize, Kernel32.PAGE_READWRITE)) {
+                System.err.printf("无法修改内存权限：0x%X%n", address);
+                return false;
+            }
+            
+            // 第三步：写入新值
+            if (!writeMemoryValue(hProcess, address, newValue, valueSize)) {
+                System.err.printf("写入内存失败：0x%X%n", address);
+                return false;
+            }
+            
+//            // 第四步：验证新值
+//            if (verifyCurrentValue(hProcess, address, newValue, valueSize)) {
+//                System.out.printf("成功修改地址 0x%X: -> %d%n", address, newValue);
+//                return true;
+//            } else {
+//                System.err.printf("修改后验证失败：0x%X%n", address);
+//                return false;
+//            }
+            return true;
+        } finally {
+//            Kernel32.INSTANCE.CloseHandle(hProcess);
+        }
+    }
+    
+    /**
+     * 验证当前内存值
+     */
+    private static boolean verifyCurrentValue(WinNT.HANDLE hProcess, long address, 
+                                            long expectedValue, int valueSize) {
+        try {
+            Pointer buffer = new Memory(valueSize);
+            IntByReference bytesRead = new IntByReference();
+            
+            boolean success = Kernel32.INSTANCE.ReadProcessMemory(
+                hProcess, new Pointer(address), buffer, valueSize, bytesRead);
+            
+            if (success && bytesRead.getValue() == valueSize) {
+                long currentValue = buffer.getLong(0);
+                return currentValue == expectedValue;
+            }
+        } catch (Exception e) {
+            System.err.println("验证值时出错: " + e.getMessage());
+        }
+        return false;
+    }
+    
+    /**
+     * 设置内存保护权限
+     */
+    private static boolean setMemoryProtection(WinNT.HANDLE hProcess, long address, 
+                                             int size, int newProtect) {
+        IntByReference oldProtect = new IntByReference();
+        
+        boolean success = Kernel32.INSTANCE.VirtualProtectEx(
+            hProcess, new Pointer(address), size, 
+            newProtect, oldProtect);
+        
+        if (success) {
+            System.out.printf("内存权限修改成功：0x%X -> 0x%X%n", 
+                oldProtect.getValue(), newProtect);
+        }
+        
+        return success;
+    }
+    
+    /**
+     * 写入内存值
+     */
+    private static boolean writeMemoryValue(WinNT.HANDLE hProcess, long address, 
+                                          long newValue, int valueSize) {
+        Memory buffer = new Memory(valueSize);
+        
+        // 根据值大小写入不同的数据类型
+        switch (valueSize) {
+            case 1:
+                buffer.setByte(0, (byte) newValue);
+                break;
+            case 2:
+                buffer.setShort(0, (short) newValue);
+                break;
+            case 4:
+                buffer.setInt(0, (int) newValue);
+                break;
+            case 8:
+                buffer.setLong(0, newValue);
+                break;
+            default:
+                throw new IllegalArgumentException("不支持的valueSize: " + valueSize);
+        }
+        
+        IntByReference bytesWritten = new IntByReference();
+        
+        boolean success = Kernel32.INSTANCE.WriteProcessMemory(
+            hProcess, new Pointer(address), buffer, valueSize, bytesWritten);
+        
+        return success && bytesWritten.getValue() == valueSize;
+    }
+    
+    /**
+     * 批量修改找到的所有1234值
+     */
+    public static int batchModifyValues(WinNT.HANDLE hProcess, List<Long> addresses, 
+                                      long oldValue, long newValue, int valueSize) {
+        int successCount = 0;
+        int total = addresses.size();
+        
+        System.out.printf("开始批量修改 %d 个地址...%n", total);
+        
+        for (int i = 0; i < total; i++) {
+            long address = addresses.get(i);
+            System.out.printf("进度: %d/%d - ", i + 1, total);
+            
+            if (modifyIntegerValue(hProcess, address, newValue, valueSize)) {
+                successCount++;
+            }
+            
+            // 添加小延迟，避免过于频繁的操作
+            try {
+                Thread.sleep(10);
+            } catch (InterruptedException e) {
+                break;
+            }
+        }
+        
+        System.out.printf("批量修改完成：成功 %d/%d%n", successCount, total);
+        return successCount;
+    }
+    
+    /**
+     * 修改字符串值
+     */
+    public static boolean modifyStringValue(WinNT.HANDLE hProcess, long address, 
+                                          String oldValue, String newValue) {
+        if (newValue.length() > oldValue.length()) {
+            System.err.println("新字符串长度不能超过原字符串");
+            return false;
+        }
+        
+        try {
+            // 验证当前字符串
+            byte[] oldBytes = oldValue.getBytes();
+            byte[] currentBytes = readMemoryBytes(hProcess, address, oldBytes.length);
+            
+            if (!java.util.Arrays.equals(currentBytes, oldBytes)) {
+                System.err.println("字符串验证失败");
+                return false;
+            }
+            
+            // 修改内存权限
+            if (!setMemoryProtection(hProcess, address, oldBytes.length, Kernel32.PAGE_READWRITE)) {
+                return false;
+            }
+            
+            // 写入新字符串
+            byte[] newBytes = newValue.getBytes();
+            byte[] writeBytes = new byte[oldBytes.length];
+            System.arraycopy(newBytes, 0, writeBytes, 0, newBytes.length);
+            // 剩余部分用0填充
+            for (int i = newBytes.length; i < writeBytes.length; i++) {
+                writeBytes[i] = 0;
+            }
+            
+            return writeMemoryBytes(hProcess, address, writeBytes);
+            
+        } finally {
+//            Kernel32.INSTANCE.CloseHandle(hProcess);
+        }
+    }
+    
+    /**
+     * 读取内存字节
+     */
+    private static byte[] readMemoryBytes(WinNT.HANDLE hProcess, long address, int size) {
+        Pointer buffer = new Memory(size);
+        IntByReference bytesRead = new IntByReference();
+        
+        boolean success = Kernel32.INSTANCE.ReadProcessMemory(
+            hProcess, new Pointer(address), buffer, size, bytesRead);
+        
+        if (success && bytesRead.getValue() == size) {
+            return buffer.getByteArray(0, size);
+        }
+        throw new RuntimeException("读取内存失败");
+    }
+    
+    /**
+     * 写入内存字节
+     */
+    private static boolean writeMemoryBytes(WinNT.HANDLE hProcess, long address, byte[] data) {
+        Memory buffer = new Memory(data.length);
+        buffer.write(0, data, 0, data.length);
+        
+        IntByReference bytesWritten = new IntByReference();
+        
+        boolean success = Kernel32.INSTANCE.WriteProcessMemory(
+            hProcess, new Pointer(address), buffer, data.length, bytesWritten);
+        
+        return success && bytesWritten.getValue() == data.length;
+    }
+}
+
         <dependency>
             <groupId>net.java.dev.jna</groupId>
             <artifactId>jna-platform</artifactId>
