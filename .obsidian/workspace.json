@@ -13,12 +13,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "ce.md",
+                "file": "redis.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "ce"
+              "title": "redis"
             }
           }
         ]
@@ -178,6 +178,7 @@
   },
   "active": "788b73443d9f0d8c",
   "lastOpenFiles": [
+    "ce.md",
     "wsl.md",
     "Welcome.md",
     "Untitled.md",
@@ -201,7 +202,6 @@
     "doris.md",
     "docker.md",
     "create a link.md",
-    "ce.md",
     "Biology.md",
     "报警.md",
     "upwd",
