@@ -113,7 +113,7 @@ mirrors:
   registry.k8s.io:
 ```
 
-### 6. 安装
+#### 6. 安装
 ```bash
 INSTALL_RKE2_ARTIFACT_PATH=/root/rke2-artifacts sh rke2-install.sh
 ```
@@ -244,3 +244,15 @@ kubectl get pods -n tqbb -o wide
 # 所有状态为Running则成功, 打开网页: http://k8s-master1/
 ```
 
+## 4.3 mysql安装
+## 4.4 doris安装
+## 4.5 flink计算启动
+## 4.6 协议服务
+## 4.7 minio安装
+## 4.8 中间服务安装(OCR, 人脸识别)
+
+
+# 五 更新服务
+
+# 六 故障排查
+# 七 日志查看
