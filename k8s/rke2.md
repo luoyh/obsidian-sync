@@ -43,13 +43,13 @@
 | tqbb-jt808.jar                  | 土桥行部标808协议解析服务 |
 | mysql-8.0.43.tar                | mysql资源包       |
 | doris-2.1.10.tar                | doris资源包       |
-|                                 |                |
+| tqbb-apps.yaml                  | 土桥行服务配置        |
 
 # 四 安装部署
 
 ## 4.1 rke2
 
-### 在k8s-master节点服务器做以下操作
+### master
 
 #### 1. 关闭selinux, 交换分区, 防火墙等
 
@@ -99,12 +99,7 @@ EOF
 
 ```
 
-### 5. 安装
-```bash
-INSTALL_RKE2_ARTIFACT_PATH=/root/rke2-artifacts sh rke2-install.sh
-```
-
-#### 6. 配置内置mirror
+#### 5. 配置内置mirror
 
 ```bash
 # 配置内置mirror, 创建/etc/rancher/rke2/config.yaml, 输入embedded-registry: true
@@ -116,6 +111,11 @@ embedded-registry: true
 mirrors:
   docker.io:
   registry.k8s.io:
+```
+
+### 6. 安装
+```bash
+INSTALL_RKE2_ARTIFACT_PATH=/root/rke2-artifacts sh rke2-install.sh
 ```
 
 #### 7. 启动
@@ -156,4 +156,91 @@ k8s-master1   Ready    control-plane,etcd   154m   v1.34.1+rke2r1
 cat /var/lib/rancher/rke2/server/node-token
 K10829816a052835a015d6188c4a701cc31eca8e4aeee355e8597d87fa1068bf213::server:e8462d3b06a44f6ebc90891bb5542be1
 ```
-2. 在k8s-master2上面执行qia
+2. 在k8s-master2上面执行前面(1~5)步骤
+3. 在/etc/rancher/rke2/config.yaml新增如下内容
+```bash
+server: https://k8s-master1:9345
+token: K10829816a052835a015d6188c4a701cc31eca8e4aeee355e8597d87fa1068bf213::server:e8462d3b06a44f6ebc90891bb5542be1
+```
+4. 安装
+```bash
+INSTALL_RKE2_ARTIFACT_PATH=/root/rke2-artifacts sh rke2-install.sh
+```
+5. 启动服务
+```bash
+systemctl enable rke2-server.service
+systemctl start rke2-server.service
+```
+6. 在k8s-master1查看节点状态
+```bash
+[root@k8s-master1 ~]# kubectl get nodes
+NAME          STATUS   ROLES                AGE    VERSION
+k8s-master1   Ready    control-plane,etcd   154m   v1.34.1+rke2r1
+k8s-master2   Ready    control-plane,etcd   15m    v1.34.1+rke2r1
+
+```
+
+### worker
+
+> 在worker节点执行上面master的1~5步骤
+
+#### 修改config.yaml
+新增server和token
+```bash
+[root@k8s-worker1 rke2-artifacts]# cat /etc/rancher/rke2/config.yaml 
+embedded-registry: true
+server: https://192.168.3.201:9345
+token: K10829816a052835a015d6188c4a701cc31eca8e4aeee355e8597d87fa1068bf213::server:e8462d3b06a44f6ebc90891bb5542be1
+
+```
+#### 安装
+```bash
+INSTALL_RKE2_TYPE="agent" INSTALL_RKE2_ARTIFACT_PATH=/root/rke2-artifacts sh rke2-install.sh
+```
+
+#### 启动
+```bash
+systemctl enable rke2-agent.service
+systemctl start rke2-agent.service
+```
+
+#### 查看状态
+```bash
+journalctl -fu rke2-agent
+```
+
+#### 查看节点
+在k8s-master1节点执行
+```bash
+[root@k8s-master1 ~]# kubectl get nodes
+NAME   STATUS   ROLES                AGE    VERSION
+k8s-master1   Ready    control-plane,etcd   154m   v1.34.1+rke2r1
+k8s-master2   Ready    control-plane,etcd   45m    v1.34.1+rke2r1
+k8s-worker1   Ready    <none>               10m   v1.34.1+rke2r1
+```
+
+## 4.2 安装服务
+
+> 在k8s-master1上执行
+
+### 1. 导入镜像
+```bash
+ctr --address /run/k3s/containerd/containerd.sock -n k8s.io image import tqbb-images.linux-amd64.tar
+```
+
+### 2. 查看导入结果
+
+```bash
+ctr --address /run/k3s/containerd/containerd.sock -n k8s.io image ls | grep tqbb
+```
+### 3. 启动服务
+```bash
+kubectl apply -f tqbb-apps.yaml
+```
+
+### 4. 查看结果
+```bash
+kubectl get pods -n tqbb -o wide
+# 所有状态为Running则成功, 打开网页: http://k8s-master1/
+```
+
