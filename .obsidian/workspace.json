@@ -13,12 +13,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "yolo/yolov8n.md.md",
+                "file": "k8s/rke2.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "yolov8n.md"
+              "title": "rke2"
             }
           }
         ]
@@ -178,8 +178,11 @@
   },
   "active": "788b73443d9f0d8c",
   "lastOpenFiles": [
-    "redis.md",
+    "k8s.md",
+    "k8s/rke2.md",
+    "k8s",
     "yolo/yolov8n.md.md",
+    "redis.md",
     "yolo",
     "ce.md",
     "wsl.md",
@@ -192,7 +195,6 @@
     "maven.md",
     "Linux.md",
     "kafka.md",
-    "k8s.md",
     "javacv.md",
     "java apm.md",
     "java.md",
@@ -204,7 +206,6 @@
     "doris.md",
     "docker.md",
     "create a link.md",
-    "Biology.md",
     "upwd",
     "imgs/Pasted image 20250728110401.png",
     "imgs/Pasted image 20250728110203.png",
@@ -220,7 +221,6 @@
     "ga",
     "media server/images/Pasted image 20240903150519.png",
     "media server/images/Pasted image 20240903150455.png",
-    "media server/images",
     "media server/images/Pasted image 20240903152215.png",
     "media server/images/Pasted image 20240903152154.png",
     "media server/images/Pasted image 20240903152141.png",
