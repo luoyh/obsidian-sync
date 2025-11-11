@@ -41,8 +41,8 @@
 | tqbb-images.linux-amd64.tar               | 土桥行服务镜像资源包     |
 | tqbb-deps.linux-amd64.tar                 | 土桥行依赖镜像资源包     |
 | tqbb-jt808.jar                            | 土桥行部标808协议解析服务 |
-| mysql-8.0.43.tar                          | mysql资源包       |
-| doris-2.1.10.tar                          | doris资源包       |
+| mysql.tgz                                 | mysql资源包       |
+| doris-2.1.10.tgz                          | doris资源包       |
 | tqbb-apps.yaml                            | 土桥行服务配置        |
 | helm-v3.19.1-linux-amd64.tar.gz           | helm           |
 | flink-kubernetes-operator-1.13.0-helm.tgz | flink helm安装包  |
@@ -258,12 +258,49 @@ kubectl get pods -n tqbb -o wide
 tar zxvf docker-28.5.2.tgz
 cd docker
 # 设置可执行
-chmod +x *
+chmod +x docker/*
 # 复制到/usr/bin下
-cp * /usr/bin/
+cp docker/* /usr/bin/
+# 复制service到systemd
+cp config/* /etc/systemd/system/
+# 创建用户组
+groupadd docker
+# 启动docker
+systemctl daemon-reload
+systemctl enable docker
+systemctl start docker
 
 ```
+
+### 2. 安装mysql
+```bash
+# 解压mysql
+tar zxvf mysql.tgz
+# 进入解压后的mysql目录
+cd mysql
+mkdir -p /data/mysql
+# 复制mysql文件
+cp -rf data /data/mysql/
+# 导入镜像
+docker load -i mysql-8.0.43.tar
+# 启动mysql
+docker run -dti --memory 32g -p 3306:3306 --restart always -v /data/mysql/data:/var/lib/mysql --name mysql mysql:8.0.43
+# 查看结果
+docker ps | grep mysql
+# 验证
+docker exec -ti mysql mysql --version
+```
+
 ## 4.4 doris安装
+### 1. fe
+```bash
+# 解压doris-2.1.10.tgz
+cd /data
+cp ~/doris-2.1.10.tgz .
+tar zxvf doris-2.1.10.tgz
+cd doris/fe
+# 修改配置priority_networks为
+```
 ## 4.5 flink
 ### 1. 安装helm
 ```bash
