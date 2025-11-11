@@ -103,14 +103,17 @@ EOF
 
 ```bash
 # 配置内置mirror, 创建/etc/rancher/rke2/config.yaml, 输入embedded-registry: true
-[root@k8s-master1 rke2-artifacts]# cat /etc/rancher/rke2/config.yaml 
+[root@k8s-master1 rke2-artifacts]# mkdir -p /etc/rancher/rke2/
+[root@k8s-master1 rke2-artifacts]# cat <<EOF > /etc/rancher/rke2/config.yaml 
 embedded-registry: true
+EOF
 
 # 创建/etc/rancher/rke2/registries.yaml, 输入如下内容
-[root@k8s-master1 rke2-artifacts]# cat /etc/rancher/rke2/registries.yaml 
+[root@k8s-master1 rke2-artifacts]# cat <<EOF > /etc/rancher/rke2/registries.yaml 
 mirrors:
   docker.io:
   registry.k8s.io:
+EOF
 ```
 
 #### 6. 安装
