@@ -31,19 +31,22 @@
 # 三 服务资源包
 
 
-| 名称                              | 说明             |
-| ------------------------------- | -------------- |
-| rke2.linux-amd64.tar.gz         | rke2安装包        |
-| rke2-images.linux-amd64.tar.zst | rke2安装镜像资源包    |
-| sha256sum-amd64.txt             | rke2验证文件       |
-| rke2-install.sh                 | rke2安装脚本       |
-| docker-28.5.2.tgz               | docker安装包      |
-| tqbb-images.linux-amd64.tar     | 土桥行服务镜像资源包     |
-| tqbb-deps.linux-amd64.tar       | 土桥行依赖镜像资源包     |
-| tqbb-jt808.jar                  | 土桥行部标808协议解析服务 |
-| mysql-8.0.43.tar                | mysql资源包       |
-| doris-2.1.10.tar                | doris资源包       |
-| tqbb-apps.yaml                  | 土桥行服务配置        |
+| 名称                                        | 说明             |
+| ----------------------------------------- | -------------- |
+| rke2.linux-amd64.tar.gz                   | rke2安装包        |
+| rke2-images.linux-amd64.tar.zst           | rke2安装镜像资源包    |
+| sha256sum-amd64.txt                       | rke2验证文件       |
+| rke2-install.sh                           | rke2安装脚本       |
+| docker-28.5.2.tgz                         | docker安装包      |
+| tqbb-images.linux-amd64.tar               | 土桥行服务镜像资源包     |
+| tqbb-deps.linux-amd64.tar                 | 土桥行依赖镜像资源包     |
+| tqbb-jt808.jar                            | 土桥行部标808协议解析服务 |
+| mysql-8.0.43.tar                          | mysql资源包       |
+| doris-2.1.10.tar                          | doris资源包       |
+| tqbb-apps.yaml                            | 土桥行服务配置        |
+| helm-v3.19.1-linux-amd64.tar.gz           | helm           |
+| flink-kubernetes-operator-1.13.0-helm.tgz | flink helm安装包  |
+| flink-cluster.yaml                        | flink集群配置      |
 
 # 四 安装部署
 
@@ -249,10 +252,34 @@ kubectl get pods -n tqbb -o wide
 
 ## 4.3 mysql安装
 ## 4.4 doris安装
-## 4.5 flink计算启动
+## 4.5 flink
+### 1. 安装helm
+```bash
+# 解压helm-v3.19.1-linux-amd64.tar.gz并复制到/usr/bin/helm
+[root@k8s-master1 ~]# tar zxvf helm-v3.19.1-linux-amd64.tar.gz
+[root@k8s-master1 ~]# cp linux-amd64/helm /usr/bin/
+```
+### 2. 安装flink-operator
+```bash
+[root@k8s-master1 ~]# helm install flink-operator ./flink-kubernetes-operator-1.13.0-helm.tgz -n tqbb --create-namespace
+```
+
+### 3. 配置flink-cluster
+```bash
+[root@k8s-master1 ~]# kubectl apply -f flink-cluster.yaml
+```
+
+### 4. 查看结果
+```bash
+[root@k8s-master1 ~]# kubectl get pods -n tqbb | grep flink
+flink-kubernetes-operator-7c7d4b67b4-4dhjw     2/2     Running   2 (33d ago)   86d
+tqxing-native-flink-cluster-7d8f8fd575-4sbx7   1/1     Running   0             33d
+```
+
 ## 4.6 协议服务
 ## 4.7 minio安装
 ## 4.8 中间服务安装(OCR, 人脸识别)
+
 
 
 # 五 更新服务
