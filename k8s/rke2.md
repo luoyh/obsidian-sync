@@ -47,6 +47,7 @@
 | helm-v3.19.1-linux-amd64.tar.gz           | helm           |
 | flink-kubernetes-operator-1.13.0-helm.tgz | flink helm安装包  |
 | flink-cluster.yaml                        | flink集群配置      |
+|                                           |                |
 
 # 四 安装部署
 
@@ -251,6 +252,17 @@ kubectl get pods -n tqbb -o wide
 ```
 
 ## 4.3 mysql安装
+### 1. 安装docker
+```bash
+# 解压docker
+tar zxvf docker-28.5.2.tgz
+cd docker
+# 设置可执行
+chmod +x *
+# 复制到/usr/bin下
+cp * /usr/bin/
+
+```
 ## 4.4 doris安装
 ## 4.5 flink
 ### 1. 安装helm
@@ -276,9 +288,15 @@ flink-kubernetes-operator-7c7d4b67b4-4dhjw     2/2     Running   2 (33d ago)   8
 tqxing-native-flink-cluster-7d8f8fd575-4sbx7   1/1     Running   0             33d
 ```
 
+### 5.验证
+```bash
+# 转发8081端口, 然后访问http://k8s-master1:8081能打开就成功了,成功后下面这个可以取消,ctrl+c
+[root@k8s-master1 ~]# kubectl port-forward svc/tqxing-native-flink-cluster-rest 8081 -n tqbb
+```
+
 ## 4.6 协议服务
-## 4.7 minio安装
-## 4.8 中间服务安装(OCR, 人脸识别)
+## ~~4.7 minio安装~~
+## 4.8 中间服务安装(MySQL,Minio,OCR, 人脸识别)
 
 
 
