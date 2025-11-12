@@ -18,7 +18,7 @@
 
 | 节点         | CPU | 内存   | 硬盘    | 数量       | 说明                  |
 | ---------- | --- | ---- | ----- | -------- | ------------------- |
-| k8s-master | ≥4  | ≥8G  | ≥500G | 1或者3(奇数) | k8s的master节点, 要求奇数个 |
+| k8s-master | ≥8  | ≥32G | ≥500G | 1或者3(奇数) | k8s的master节点, 要求奇数个 |
 | k8s-worker | ≥8  | ≥32G | ≥500G | ≥3(奇数)   | k8s的worker节点,要求奇数个  |
 | mysql      | ≥8  | ≥32G | ≥1T   | 1        | 业务数据库服务             |
 | doris-fe   | ≥8  | ≥32G | ≥500G | 1或者3     | doris fe(大数据分析数据库)  |
@@ -648,5 +648,47 @@ docker run -dti --name face -p 9004:8080 --memory 16g --restart always tqbb/face
 
 # 五 更新服务
 
-# 六 故障排查
+## 1. 上传更新包到`k8s-master1`服务器
+- 包的格式为`<name>-<version>.tar`
+- 其中`name`就是服务名称, `version`就是版本号
+- 比如更新包是`tqbb-svcs-face-0.3.tar`, `name`就是`tqbb-svcs-face`, `version`为`0.3`
+## 2. 导入镜像
+```bash
+ctr --address /run/k3s/containerd/containerd.sock -n k8s.io image import <name-version>.tar
+```
+
+### 3. 修改配置
+- 进入`/data/apps/conf`
+- 找到对应的`k8s-<name>.yaml`
+- 修改其中的`image`的最后版本号为新的`version`
+```bash
+cd /data/apps/conf
+vi k8s-tqbb-svcs-face.yaml
+```
+
+### 4. 更新
+```bash
+cd /data/apps/conf
+kubectl apply -f k8s-tqbb-svcs-face.yaml
+```
+# 六 常用命令
+
+
+| 命令                                                  | 说明                    |
+| --------------------------------------------------- | --------------------- |
+| `systemctl status rke2-server`                      | 在`k8s master`节点查看状态   |
+| `systemctl status rke2-agent`                       | 在`k8s worker`节点查看状态   |
+| `kubectl get all -A`                                | 在`k8s master`节点查看服务   |
+| `kubectl get nodes`                                 | `在k8s master`节点查看集群状态 |
+| `helm list`                                         | `helm`查看安装包           |
+| `docker image ls`                                   | `docker`查看镜像          |
+| `kubectl get pods -A \  grep biz`                   | 查看`biz`服务运行情况         |
+| `kubectl logs -f --tail 100 <pod biz name> -n tqbb` | 查看`biz`的日志            |
+
 # 七 日志查看
+
+比如需要查看`biz`服务的日志, 现在`k8s master`节点执行
+```bash
+kubectl get pods -n tqbb -o wide | grep biz
+```
+这里会得到`biz`运行的节点, 然后到对应的节点下的`/data/tqbb/logs/tuqiaoxing-admin-biz`查看日志
