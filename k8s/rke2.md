@@ -24,7 +24,7 @@
 | doris-fe   | ≥8  | ≥32G | ≥500G | 1或者3     | doris fe(大数据分析数据库)  |
 | doris-be   | ≥8  | ≥64G | ≥2T   | 1或者3     | doris be(大数据分析数据库)  |
 | minio      | ≥4  | ≥16G | ≥1T   | 1        | oss服务               |
-| deps       | ≥8  | ≥32G | ≥1T   | 1        | 其它依赖服务(如OCR, 人脸失败)  |
+| deps       | ≥8  | ≥32G | ≥1T   | 1        | 其它依赖服务(如OCR, 人脸识别)  |
 | jtt        | ≥8  | ≥32G | ≥1T   | 2        | 北斗部标协议服务            |
 
 # 三 服务资源包
@@ -50,7 +50,48 @@
 
 # 四 安装部署
 
-## 4.1 rke2
+## 4.1 mysql安装
+### 1. 安装docker
+```bash
+# 解压docker
+tar zxvf docker-28.5.2.tgz
+cd docker
+# 设置可执行
+chmod +x docker/*
+# 复制到/usr/bin下
+cp docker/* /usr/bin/
+# 复制service到systemd
+cp config/* /etc/systemd/system/
+# 创建用户组
+groupadd docker
+# 启动docker
+systemctl daemon-reload
+systemctl enable docker
+systemctl start docker
+
+```
+
+### 2. 安装mysql
+```bash
+# 解压mysql
+tar zxvf mysql.tgz
+# 进入解压后的mysql目录
+cd mysql
+mkdir -p /data/mysql
+# 复制mysql文件
+cp -rf data /data/mysql/
+# 导入镜像
+docker load -i mysql-8.0.43.tar
+# 启动mysql
+docker run -dti --memory 32g -p 3306:3306 --restart always -v /data/mysql/data:/var/lib/mysql --name mysql mysql:8.0.43
+# 查看结果
+docker ps | grep mysql
+# 验证
+docker exec -ti mysql mysql --version
+```
+
+
+## 4.2 rke2
 
 ### master
 
@@ -225,72 +266,7 @@ k8s-master2   Ready    control-plane,etcd   45m    v1.34.1+rke2r1
 k8s-worker1   Ready    <none>               10m   v1.34.1+rke2r1
 ```
 
-## 4.2 安装服务
-
-> 在k8s-master1上执行
-
-### 1. 导入镜像
-```bash
-ctr --address /run/k3s/containerd/containerd.sock -n k8s.io image import tqbb-images.linux-amd64.tar
-```
-
-### 2. 查看导入结果
-
-```bash
-ctr --address /run/k3s/containerd/containerd.sock -n k8s.io image ls | grep tqbb
-```
-### 3. 启动服务
-```bash
-kubectl apply -f tqbb-apps.yaml
-```
-
-### 4. 查看结果
-```bash
-kubectl get pods -n tqbb -o wide
-# 所有状态为Running则成功, 打开网页: http://k8s-master1/
-```
-
-## 4.3 mysql安装
-### 1. 安装docker
-```bash
-# 解压docker
-tar zxvf docker-28.5.2.tgz
-cd docker
-# 设置可执行
-chmod +x docker/*
-# 复制到/usr/bin下
-cp docker/* /usr/bin/
-# 复制service到systemd
-cp config/* /etc/systemd/system/
-# 创建用户组
-groupadd docker
-# 启动docker
-systemctl daemon-reload
-systemctl enable docker
-systemctl start docker
-
-```
-
-### 2. 安装mysql
-```bash
-# 解压mysql
-tar zxvf mysql.tgz
-# 进入解压后的mysql目录
-cd mysql
-mkdir -p /data/mysql
-# 复制mysql文件
-cp -rf data /data/mysql/
-# 导入镜像
-docker load -i mysql-8.0.43.tar
-# 启动mysql
-docker run -dti --memory 32g -p 3306:3306 --restart always -v /data/mysql/data:/var/lib/mysql --name mysql mysql:8.0.43
-# 查看结果
-docker ps | grep mysql
-# 验证
-docker exec -ti mysql mysql --version
-```
-
-## 4.4 doris安装
+## 4.3 doris安装
 
 ### jdk安装
 ```bash
@@ -585,6 +561,52 @@ export PATH=$JAVA_HOME/bin:$PATH
    |    2 | 10.20 | BBB  |   20 |
    +------+-------+------+------+
    ```
+
+## 4.4 安装服务
+
+> 在k8s-master1上执行
+
+### 1. 导入镜像
+```bash
+ctr --address /run/k3s/containerd/containerd.sock -n k8s.io image import tqbb-images.linux-amd64.tar
+```
+
+### 2. 查看导入结果
+
+```bash
+ctr --address /run/k3s/containerd/containerd.sock -n k8s.io image ls | grep tqbb
+```
+### 3. 启动服务
+**修改MySQL IP, 例如MySQL的服务器IP是10.0.8.31**
+
+```bash
+sed -i 's/{MYSQL_ADDRESS_IP}/10.0.8.31/g' tqbb-apps.yaml
+```
+**修改Doris IP, 例如Doris的服务器IP是10.0.8.32**
+```bash
+sed -i 's/{DORIS_ADDRESS_IP}/10.0.8.32/g' tqbb-apps.yaml
+```
+**修改minio IP, 例如minio的服务器IP是10.0.8.33**
+```bash
+sed -i 's/{MINIO_ADDRESS_IP}/10.0.8.33/g' tqbb-apps.yaml
+```
+**修改OCR IP, 例如OCR的服务器IP是10.0.8.34**
+```bash
+sed -i 's/{OCR_ADDRESS_IP}/10.0.8.34/g' tqbb-apps.yaml
+```
+**修改人脸服务 IP, 例如人脸的服务器IP地址是10.0.8.35**
+```bash
+sed -i 's/{FACE_ADDRESS_IP}/10.0.8.34/g' tqbb-apps.yaml
+```
+**启动服务**
+```bash
+kubectl apply -f tqbb-apps.yaml
+```
+### 4. 查看结果
+```bash
+kubectl get pods -n tqbb -o wide
+# 所有状态为Running则成功, 打开网页: http://k8s-master1/
+```
 
 ## 4.5 flink
 ### 1. 安装helm
