@@ -624,12 +624,28 @@ tqxing-native-flink-cluster-7d8f8fd575-4sbx7   1/1     Running   0             3
 
 ### 2. 安装minio
 ```bash
+# 导入镜像
 docker load -i minio.tar
-
+# 启动
+docker run -tdi --name minio -p 9000:9000 -p 9001:9001 -v /data/minio:/var/lib/minio --memory 16g --restart always tqbb/oss-minio:0.1
 ```
-## 4.8 中间服务安装(MySQL,Minio,OCR, 人脸识别)
 
+### 3. 验证
+浏览器打开`http://{ip}:9000`查看
+## 4.8 中间服务安装(OCR, 人脸识别)
 
+### 1. 安装docker
+> 参照前面mysql安装小节安装docker
+
+### 2. 导入镜像
+```bash
+# 包含ocr和人脸识别
+docker load -i middle.docker.tar
+# 启动ocr
+docker run -dti --name ocr -p 9003:8080 --memory 8g --restart always tqbb/ocr:0.1
+# 启动人脸识别
+docker run -dti --name face -p 9004:8080 --memory 16g --restart always tqbb/face:0.1
+```
 
 # 五 更新服务
 
