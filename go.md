@@ -1,5 +1,7 @@
 
 ```bash
+go mod init xxx
+
 go env -w GOOS=linux
 go run main.go
 
