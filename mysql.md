@@ -150,4 +150,26 @@ mysqldump \
 --all-databases \
 > /home/local/data/mysql/all.20260123.sql
 
+
+# all
+# backup
+./xtrabackup  --user=ro --password='xx@2025.RD' --host=192.168.1.4 --port=31603 --backup --target-dir=/home/data/mysqlbackup/dev/full_20260123 --no-lock  --datadir=/home/rancher/mysql/2/data --parallel=4
+
+rsync -avz full_20260123 root@192.168.1.5:/home/local/data/mysql/dev/
+
+./xtrabackup  --user=ro --password='xx@2025.RD' --host=192.168.1.4 --port=31603 --backup --target-dir=/home/data/mysqlbackup/dev/ince_1 --no-lock  --datadir=/home/rancher/mysql/2/data --parallel=4 --incremental-basedir=/home/data/mysqlbackup/dev/full_20260123
+
+./xtrabackup  --user=ro --password='x@2025.RD' --host=192.168.6.4 --port=31603 --backup --target-dir=/home/data/mysqlbackup/dev/ince_2 --no-lock  --datadir=/home/rancher/mysql/2/data --parallel=4 --incremental-basedir=/home/data/mysqlbackup/dev/ince_1
+
+rsync -avz ince_1 192.168.1.5:/home/local/data/mysql/dev/
+rsync -avz ince_2 192.168.1.5:/home/local/data/mysql/dev/
+
+# restore
+./xtrabackup --prepare --apply-log-only --target-dir=/home/local/data/mysql/dev/full_20260123
+
+./xtrabackup --prepare --apply-log-only --target-dir=/home/local/data/mysql/dev/full_20260123 --incremental-dir=/home/local/data/mysql/dev/ince_1
+
+./xtrabackup --prepare  --target-dir=/home/local/data/mysql/dev/full_20260123 --incremental-dir=/home/local/data/mysql/dev/ince_2
+
+./xtrabackup --copy-back --target-dir=/home/local/data/mysql/dev/full_20260123  --datadir=/home/local/data/mysql/dev/restore/
 ```
