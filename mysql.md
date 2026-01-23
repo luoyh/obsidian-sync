@@ -96,7 +96,7 @@ FLUSH PRIVILEGES;
 --host=127.0.0.1 \
 --port=3306 \
 --backup \
---target-dir=/home/data/mysqlbackup/dev/20260123 \
+--target-dir=/data/backup/fullmysql \
 --no-lock  \
 --datadir=/data/mysql/data
 
@@ -107,21 +107,21 @@ FLUSH PRIVILEGES;
 --host=127.0.0.1 \
 --port=3306 \
 --backup \
---target-dir=/home/data/mysqlbackup/dev/20260124 \
+--target-dir=/data/backup/incrmysql1 \
 --no-lock  \
 --datadir=/data/mysql/data \
---incremental-basedir=/home/data/mysqlbackup/dev/20260123
+--incremental-basedir=/data/backup/fullmysql
 
 # restore
-./xtrabackup --prepare --target-dir=/home/data/mysqlbackup/dev/20260123
+./xtrabackup --prepare --target-dir=/data/backup/fullmysql
 # increment
 ./xtrabackup --prepare \
---target-dir=/home/data/mysqlbackup/dev/20260123 \
+--target-dir=/data/backup/fullmysql \
 --apply-log-only
 
 ./xtrabackup --prepare \
---target-dir=/home/data/mysqlbackup/dev/20260123 \
---incremental-dir=/home/data/mysqlbackup/dev/20260124
+--target-dir=/data/backup/fullmysql \
+--incremental-dir=/data/backup/incrmysql1
 
 # copy to other server
 # /home/data/mysqlbackup/dev/20260123
