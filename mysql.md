@@ -78,6 +78,10 @@ mysql> SELECT o_id, JSON_OBJECTAGG(attribute, value)
 ### backup/restore
 
 ```bash
+# 查看glibc的版本
+ldd --version
+
+
 # create readonly user
 CREATE USER `ro`@`%` IDENTIFIED BY 'readonly@pwd';
 
@@ -96,8 +100,28 @@ FLUSH PRIVILEGES;
 --no-lock  \
 --datadir=/data/mysql/data
 
+# increment
+./xtrabackup  \
+--user=ro \
+--password='readonly@pwd' \
+--host=127.0.0.1 \
+--port=3306 \
+--backup \
+--target-dir=/home/data/mysqlbackup/dev/20260124 \
+--no-lock  \
+--datadir=/data/mysql/data \
+--incremental-basedir=/home/data/mysqlbackup/dev/20260123
+
 # restore
 ./xtrabackup --prepare --target-dir=/home/data/mysqlbackup/dev/20260123
+# increment
+./xtrabackup --prepare \
+--target-dir=/home/data/mysqlbackup/dev/20260123 \
+--apply-log-only
+
+./xtrabackup --prepare \
+--target-dir=/home/data/mysqlbackup/dev/20260123 \
+--incremental-dir=/home/data/mysqlbackup/dev/20260124
 
 # copy to other server
 # /home/data/mysqlbackup/dev/20260123
