@@ -109,3 +109,13 @@ public class RedisHexAsBytes {
 }
 
 ```
+
+
+## 启动一个maven项目
+
+```
+  & 'C:\Users\huitao\.trae-cn\extensions\redhat.java-1.51.0-win32-x64\jre\21.0.9-win32-x86_64\bin\java.exe' '@C:\Users\huitao\AppData\Local\Temp\cp_aziq4j5fplqnvqsa7muaz5tl6.argfile' 'com.moreinsight.MoreinsightApplication' 
+  
+# cp_aziq4j5fplqnvqsa7muaz5tl6.argfile内容:
+ -XX:+ShowCodeDetailsInExceptionMessages -cp "E:\\.roy\\data\\code\\tmp\\moreinsight\\moreinsight-admin\\target\\classes;e:\\.roy\\data\\.m2\\com\\github\\ben-manes\\caffeine\\caffeine\\3.2.3\\caffeine-3.2.3.jar;[...jars]"
+```
