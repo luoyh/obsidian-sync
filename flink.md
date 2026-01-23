@@ -115,3 +115,65 @@
         ;
     
 ```
+
+
+## flink run on docker
+
+```yaml
+
+# Dockerfile
+# Use the official Flink image as base, adjust the tag as needed (e.g., 1.19-scala_2.12)
+FROM flink:1.16.3
+
+# Download the Flink Kafka SQL Connector JAR and place it in the Flink lib directory
+# This example uses a specific version; check the Flink documentation for the correct one
+COPY lib/* /opt/flink/lib/
+
+
+# docker-compose.yml
+version: "2.2"
+services:
+  jobmanager:
+#image: flink:1.16.3
+    build: .
+    ports:
+      - "17013:8081"
+    command: jobmanager
+    extra_hosts:
+      - "tuqiaoxing-kafka.tqxing-test:192.168.1.11"
+    environment:
+      - |
+        FLINK_PROPERTIES=
+        jobmanager.rpc.address: jobmanager
+
+  taskmanager:
+#   image: flink:1.16.3
+    build: .
+    depends_on:
+      - jobmanager
+    command: taskmanager
+    extra_hosts:
+      - "tuqiaoxing-kafka.tqxing-test:192.168.1.11"
+    scale: 2
+    environment:
+      - |
+        FLINK_PROPERTIES=
+        jobmanager.rpc.address: jobmanager
+        taskmanager.numberOfTaskSlots: 2                                                                                                     
+```
+
+### start
+
+```bash
+# lib
+[root@localhost flink]# ll lib/
+total 66792
+-rw-r--r--. 1 root root   248892 Dec  2 10:42 flink-connector-jdbc-1.16.3.jar
+-rw-r--r--. 1 root root 40950669 Jan 22 14:44 flink-doris-connector-1.16-25.1.0.jar
+-rw-r--r--. 1 root root  5553899 Oct 23  2024 flink-sql-connector-kafka-1.16.2.jar
+-rw-r--r--. 1 root root 21637117 Jan 22 14:54 flink-sql-connector-mysql-cdc-3.5.0.jar
+
+
+# start
+docker-compose -f flink-compose.yml up -d
+```
