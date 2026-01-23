@@ -74,3 +74,56 @@ mysql> SELECT o_id, JSON_OBJECTAGG(attribute, value)
 +------+---------------------------------------+
 2 rows in set (0.00 sec)
 ```
+
+### backup/restore
+
+```bash
+# create readonly user
+CREATE USER `ro`@`%` IDENTIFIED BY 'readonly@pwd';
+
+GRANT Select, Show Databases, Show View ON *.* TO `ro`@`%`
+GRANT Select, Show Databases, Show View,BACKUP_ADMIN,PROCESS,RELOAD, REPLICATION CLIENT ON *.* TO 'ro'@'%';
+FLUSH PRIVILEGES;
+
+# backup by xtrabackup
+./xtrabackup  \
+--user=ro \
+--password='readonly@pwd' \
+--host=127.0.0.1 \
+--port=3306 \
+--backup \
+--target-dir=/home/data/mysqlbackup/dev/20260123 \
+--no-lock  \
+--datadir=/data/mysql/data
+
+# restore
+./xtrabackup --prepare --target-dir=/home/data/mysqlbackup/dev/20260123
+
+# copy to other server
+# /home/data/mysqlbackup/dev/20260123
+rsync -avz 20260123 root@192.168.1.3:/home/local/data/mysql/
+
+# test by docker
+docker run \
+--name mysql \
+-v /home/local/data/mysql/20260123:/var/lib/mysql \
+-v /home/local/data/mysql/conf:/etc/mysql/conf.d \
+-p 3306:3306 \
+-d mysql:8.0.34 \
+--character-set-server=utf8mb4 \
+--collation-server=utf8mb4_unicode_ci \
+--lower_case_table_names=1
+
+
+# backup by mysqldump
+mysqldump \
+-h xxx \
+-P 3306 \
+-u ro \
+-p 'readonly@pwd' \
+--single-transaction \
+--skip-lock-tables \
+--all-databases \
+> /home/local/data/mysql/all.20260123.sql
+
+```
