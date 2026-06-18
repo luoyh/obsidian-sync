@@ -90,6 +90,7 @@ GRANT Select, Show Databases, Show View,BACKUP_ADMIN,PROCESS,RELOAD, REPLICATION
 FLUSH PRIVILEGES;
 
 # backup by xtrabackup
+# 全量备份
 ./xtrabackup  \
 --user=ro \
 --password='readonly@pwd' \
@@ -101,6 +102,7 @@ FLUSH PRIVILEGES;
 --datadir=/data/mysql/data
 
 # increment
+# 增量备份
 ./xtrabackup  \
 --user=ro \
 --password='readonly@pwd' \
@@ -113,13 +115,16 @@ FLUSH PRIVILEGES;
 --incremental-basedir=/data/backup/fullmysql
 
 # restore
+# 恢复,恢复全量备份,如果没有--apply-log-only则不会进行增量恢复
 ./xtrabackup --prepare --target-dir=/data/backup/fullmysql
-# increment
-./xtrabackup --prepare \
---target-dir=/data/backup/fullmysql \
---apply-log-only
 
-./xtrabackup --prepare \
+# increment
+# 恢复,使用增量方式恢复,可以使用增量的备份的数据一直恢复
+./xtrabackup --prepare --apply-log-only \
+--target-dir=/data/backup/fullmysql \
+
+# 基于全量的备份进行增量恢复
+./xtrabackup --prepare --apply-log-only \
 --target-dir=/data/backup/fullmysql \
 --incremental-dir=/data/backup/incrmysql1
 
@@ -152,24 +157,35 @@ mysqldump \
 
 
 # all
-# backup
+# backup,全量备份
 ./xtrabackup  --user=ro --password='xx@2025.RD' --host=192.168.1.4 --port=31603 --backup --target-dir=/home/data/mysqlbackup/dev/full_20260123 --no-lock  --datadir=/home/rancher/mysql/2/data --parallel=4
 
 rsync -avz full_20260123 root@192.168.1.5:/home/local/data/mysql/dev/
 
+# 第一个增量备份,基于全量备份
 ./xtrabackup  --user=ro --password='xx@2025.RD' --host=192.168.1.4 --port=31603 --backup --target-dir=/home/data/mysqlbackup/dev/ince_1 --no-lock  --datadir=/home/rancher/mysql/2/data --parallel=4 --incremental-basedir=/home/data/mysqlbackup/dev/full_20260123
 
+# 第二次增量备份,基于前一个增量备份
 ./xtrabackup  --user=ro --password='x@2025.RD' --host=192.168.6.4 --port=31603 --backup --target-dir=/home/data/mysqlbackup/dev/ince_2 --no-lock  --datadir=/home/rancher/mysql/2/data --parallel=4 --incremental-basedir=/home/data/mysqlbackup/dev/ince_1
 
 rsync -avz ince_1 192.168.1.5:/home/local/data/mysql/dev/
 rsync -avz ince_2 192.168.1.5:/home/local/data/mysql/dev/
 
-# restore
+# restore, 恢复前需把全量的备份变成prepare,注意这个是不可逆的,且只能执行一次
 ./xtrabackup --prepare --apply-log-only --target-dir=/home/local/data/mysql/dev/full_20260123
 
+# 恢复增量备份到全量备份
 ./xtrabackup --prepare --apply-log-only --target-dir=/home/local/data/mysql/dev/full_20260123 --incremental-dir=/home/local/data/mysql/dev/ince_1
 
-./xtrabackup --prepare  --target-dir=/home/local/data/mysql/dev/full_20260123 --incremental-dir=/home/local/data/mysql/dev/ince_2
+# 恢复第二个增量备份到全量备份
+./xtrabackup --prepare --apply-log-only --target-dir=/home/local/data/mysql/dev/full_20260123 --incremental-dir=/home/local/data/mysql/dev/ince_2
 
+# 恢复最后一个增量备份到全量备份,没有加--apply-log-only则全量备份会被锁定,后续不可再通过增量备份恢复,只能执行一次
+./xtrabackup --prepare --target-dir=/home/local/data/mysql/dev/full_20260123 --incremental-dir=/home/local/data/mysql/dev/ince_2
+
+# 恢复全量备份, 后续不可在通过增量备份恢复,只能执行一次
+./xtrabackup --prepare --target-dir=/home/local/data/mysql/dev/full_20260123
+
+# 复制备份到数据目录
 ./xtrabackup --copy-back --target-dir=/home/local/data/mysql/dev/full_20260123  --datadir=/home/local/data/mysql/dev/restore/
 ```

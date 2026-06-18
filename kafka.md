@@ -211,3 +211,41 @@ public class KafkaTestGPSPrint3 {
 }
 
 ```
+
+
+### docker-compose.yml
+
+```yaml
+version: '3.8'                                                                                                                                                                                                                                                                
+services:
+  kafka:
+    user: root
+    image: apache/kafka-native:4.1.2
+    container_name: kafka
+    ports:
+      - "19092:19092"
+    environment:
+      KAFKA_NODE_ID: 1
+      KAFKA_LISTENERS: PLAINTEXT://0.0.0.0:19092,CONTROLLER://0.0.0.0:9093
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://172.17.0.1:19092
+      KAFKA_CONTROLLER_QUORUM_VOTERS: 1@localhost:9093
+      KAFKA_CONTROLLER_LISTENER_NAMES: CONTROLLER
+      KAFKA_PROCESS_ROLES: broker,controller
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+      KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 1
+      KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 1
+      KAFKA_LOG_RETENTION_HOURS: 168
+      KAFKA_LOG_DIRS: /var/lib/kafka/data
+    volumes:
+      - kafka-logs:/var/lib/kafka/data
+      - kafka-kraft:/tmp/kraft-combined-logs
+      - kafka-config:/opt/kafka/config
+volumes:
+  kafka-logs:
+    driver: local
+  kafka-kraft:
+    driver: local
+  kafka-config:
+    driver: local
+
+```
