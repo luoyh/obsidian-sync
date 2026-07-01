@@ -8,63 +8,20 @@
         "type": "tabs",
         "children": [
           {
-            "id": "788b73443d9f0d8c",
+            "id": "8e9c46aac7b88b65",
             "type": "leaf",
             "state": {
               "type": "markdown",
               "state": {
-                "file": "editplus.md",
+                "file": "gitlab cicd.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "editplus"
-            }
-          },
-          {
-            "id": "5d0fb252ef0c3181",
-            "type": "leaf",
-            "state": {
-              "type": "markdown",
-              "state": {
-                "file": "mysql.md",
-                "mode": "source",
-                "source": false
-              },
-              "icon": "lucide-file",
-              "title": "mysql"
-            }
-          },
-          {
-            "id": "9f85492b541546fb",
-            "type": "leaf",
-            "state": {
-              "type": "markdown",
-              "state": {
-                "file": "Linux.md",
-                "mode": "source",
-                "source": false
-              },
-              "icon": "lucide-file",
-              "title": "Linux"
-            }
-          },
-          {
-            "id": "21abe0ad5867b3f4",
-            "type": "leaf",
-            "state": {
-              "type": "markdown",
-              "state": {
-                "file": "tcpdump.md",
-                "mode": "source",
-                "source": false
-              },
-              "icon": "lucide-file",
-              "title": "tcpdump"
+              "title": "gitlab cicd"
             }
           }
-        ],
-        "currentTab": 3
+        ]
       }
     ],
     "direction": "vertical"
@@ -219,8 +176,10 @@
       "obsidian-git:Open Git source control": false
     }
   },
-  "active": "21abe0ad5867b3f4",
+  "active": "8e9c46aac7b88b65",
   "lastOpenFiles": [
+    "tcpdump.md",
+    "gitlab cicd.md",
     "kafka.md",
     "flink.md",
     "mysql.md",
@@ -249,7 +208,6 @@
     "wsl.md",
     "Welcome.md",
     "Untitled.md",
-    "tcpdump.md",
     "spring.md",
     "javacv.md",
     "html2pdf.md",
