@@ -13,12 +13,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "gitlab cicd.md",
+                "file": "Linux.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "gitlab cicd"
+              "title": "Linux"
             }
           }
         ]
@@ -178,8 +178,8 @@
   },
   "active": "8e9c46aac7b88b65",
   "lastOpenFiles": [
-    "tcpdump.md",
     "gitlab cicd.md",
+    "tcpdump.md",
     "kafka.md",
     "flink.md",
     "mysql.md",
