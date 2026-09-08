@@ -257,3 +257,18 @@ fio --randrepeat=1 --ioengine=libaio --direct=1 --gtod_reduce=1 --name=test --bs
 /var/crash/{time}/*
 # 可使用crash命令查看分析
 ```
+
+# linux已经运行的任务转到后台
+
+```bash
+# 比如运行了一个很耗时的脚本
+sh test.sh
+# 这时想不中断脚本且退出终端
+ctrl+z
+bg
+disown
+# 或者使用jobs查看任务号, 比如是1
+disown %1
+
+# disown -h 不会从jobs移除, 只是不会发送sighup给任务.
+```
