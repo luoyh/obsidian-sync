@@ -484,3 +484,33 @@ select
             order by vehicle_id
             
 ```
+
+
+### doris服务器重启后数据查询错误
+```
+doris-2.1.10 Database returned an SQL error (stage: execute). Server error: `ERROR 1105 (HY000): errCode = 2, detailMessage = (192.168.30.64)[CANCELLED]fail to find path in version_graph. spec_version: 0-223305' SQL text omitted from user-facing error; enable debug SQL diagnostics to inspect the original statement.
+
+```
+
+```
+# 首先可以去对应的be机器,192.168.30.64查看be.INFO日志, 拿到tabletId
+tail -f be.INFO | grep  tablet | grep missed
+
+, tablet:39925211, missed version for version:[0-223407]
+, tablet:39925195, missed version for version:[0-223407]
+W20261027 12:01:04.223393  4838 tablet.cpp:1355] 39925211 has 2 missed version:[223304-223304],[223305-223305],
+
+# 然后在doris执行
+show tablet 39925211;
+
+# 拿到detailCmd,执行
+SHOW PROC '/dbs/10283/39925185/partitions/39925184/39925186/39925207';
+
+# 可以看到LastFailedVersion>-1的就是有问题的副本, 可以设置bad, 也可以等它自动恢复
+ADMIN SET REPLICA STATUS PROPERTIES(
+    "tablet_id" = "5457196",
+    "backend_id" = "10216",
+    "status" = "bad"
+);
+
+```
