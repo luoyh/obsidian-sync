@@ -500,6 +500,9 @@ tail -f be.INFO | grep  tablet | grep missed
 , tablet:39925195, missed version for version:[0-223407]
 W20261027 12:01:04.223393  4838 tablet.cpp:1355] 39925211 has 2 missed version:[223304-223304],[223305-223305],
 
+show tablets from rm_vehicle_gps_info_latest;
+
+
 # 然后在doris执行
 show tablet 39925211;
 
